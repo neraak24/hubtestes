@@ -271,8 +271,8 @@
       <h1>Hub</h1>
       <p>Entre com sua conta para gerenciar perfis.</p>
       <form id="login-form">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" required autocomplete="username">
+        <label for="login-usuario">Usuário</label>
+        <input id="login-usuario" type="text" required autocomplete="username">
         <label for="senha">Senha</label>
         <input id="senha" type="password" required autocomplete="current-password">
         <button class="primary" type="submit" id="login-btn">Entrar</button>
@@ -285,8 +285,8 @@
       <form id="request-form" style="display:none;">
         <label for="req-nome">Nome</label>
         <input id="req-nome" type="text" required>
-        <label for="req-email">E-mail</label>
-        <input id="req-email" type="email" required>
+        <label for="req-usuario">Usuário</label>
+        <input id="req-usuario" type="text" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9._-]+" title="Letras, números, ponto, traço ou underline">
         <label for="req-senha">Senha</label>
         <input id="req-senha" type="password" required minlength="6">
         <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
@@ -296,7 +296,7 @@
       </form>
       <div class="error" id="request-error" style="display:none;"></div>
       <div id="request-success" style="display:none; margin-top:14px; font-size:13px; color:var(--accent);">
-        Pedido enviado! Assim que for aprovado, você já pode entrar com esse e-mail e senha.
+        Pedido enviado! Assim que for aprovado, você já pode entrar com esse usuário e senha.
       </div>
     </div>
   </main>
@@ -409,14 +409,14 @@
     requestBtn.textContent = 'Enviando...';
 
     const nome = document.getElementById('req-nome').value.trim();
-    const email = document.getElementById('req-email').value.trim();
+    const usuario = document.getElementById('req-usuario').value.trim();
     const senha = document.getElementById('req-senha').value;
 
     try {
       const res = await fetch(EDGE_BASE + '/solicitar-acesso', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-        body: JSON.stringify({ nome, email, senha })
+        body: JSON.stringify({ nome, usuario, senha })
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Não foi possível enviar o pedido.');
@@ -454,8 +454,8 @@
         const li = document.createElement('li');
         li.innerHTML = `
           <div>
-            <div class="profile-name">${escapeHtml(p.nome || p.email)}</div>
-            <div class="profile-meta">${escapeHtml(p.email)}</div>
+            <div class="profile-name">${escapeHtml(p.nome || p.usuario)}</div>
+            <div class="profile-meta">@${escapeHtml(p.usuario)}</div>
           </div>
           <div>
             <button class="approve-btn" data-id="${p.id}" style="border:1px solid var(--accent); color:var(--accent); background:none; border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer; margin-right:6px;">Aprovar</button>
@@ -501,13 +501,14 @@
     loginError.style.display = 'none';
     loginBtn.disabled = true;
     loginBtn.textContent = 'Entrando...';
-    const email = document.getElementById('email').value.trim();
+    const usuarioInput = document.getElementById('login-usuario').value.trim().toLowerCase();
     const senha = document.getElementById('senha').value;
-    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    const emailParaLogin = usuarioInput.includes('@') ? usuarioInput : usuarioInput + '@hub.interno';
+    const { error } = await sb.auth.signInWithPassword({ email: emailParaLogin, password: senha });
     loginBtn.disabled = false;
     loginBtn.textContent = 'Entrar';
     if (error) {
-      loginError.textContent = 'E-mail ou senha incorretos.';
+      loginError.textContent = 'Usuário ou senha incorretos.';
       loginError.style.display = 'block';
       return;
     }
@@ -681,4 +682,3 @@
 </script>
 
 </body>
-</html>
