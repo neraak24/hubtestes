@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hub · Perfis</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #eaf3fb;
+    --panel: #ffffff;
+    --ink: #1c2b3a;
+    --ink-soft: #5b7086;
+    --line: #d7e6f2;
+    --accent: #2f6690;
+    --accent-soft: #e3eff8;
+    --danger: #b0503f;
+    --radius: 10px;
+    --sky-top: #cfe7f7;
+    --sky-bottom: #f3f9fd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+  header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+  }
+  header .brand {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  header button {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  header button:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  main { max-width: 640px; margin: 0 auto; padding: 48px 24px; }
+
+  /* Login */
+  #login-view {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  }
+  .cloud-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cloud {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 100px;
+    opacity: 0.85;
+    filter: blur(0.3px);
+  }
+  .cloud::before, .cloud::after {
+    content: "";
+    position: absolute;
+    background: #ffffff;
+    border-radius: 100px;
+  }
+  .cloud-a { width: 160px; height: 46px; top: 12%; }
+  .cloud-a::before { width: 80px; height: 60px; top: -34px; left: 18px; }
+  .cloud-a::after { width: 60px; height: 46px; top: -22px; left: 90px; }
+
+  .cloud-b { width: 110px; height: 34px; top: 34%; opacity: 0.7; }
+  .cloud-b::before { width: 56px; height: 40px; top: -22px; left: 14px; }
+  .cloud-b::after { width: 40px; height: 30px; top: -14px; left: 60px; }
+
+  .cloud-c { width: 200px; height: 54px; top: 62%; opacity: 0.9; }
+  .cloud-c::before { width: 96px; height: 70px; top: -40px; left: 24px; }
+  .cloud-c::after { width: 70px; height: 52px; top: -26px; left: 110px; }
+
+  .cloud-d { width: 90px; height: 28px; top: 80%; opacity: 0.6; }
+  .cloud-d::before { width: 46px; height: 32px; top: -18px; left: 10px; }
+  .cloud-d::after { width: 34px; height: 24px; top: -12px; left: 50px; }
+
+  @keyframes drift {
+    from { transform: translateX(-260px); }
+    to { transform: translateX(calc(100vw + 260px)); }
+  }
+  .cloud-a { animation: drift 62s linear infinite; }
+  .cloud-b { animation: drift 84s linear infinite; animation-delay: -20s; }
+  .cloud-c { animation: drift 70s linear infinite; animation-delay: -45s; }
+  .cloud-d { animation: drift 95s linear infinite; animation-delay: -10s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloud { animation: none !important; }
+  }
+
+  #login-view main { position: relative; z-index: 1; }
+  .login-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(2px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 340px;
+    box-shadow: 0 20px 50px -30px rgba(47, 102, 144, 0.35);
+  }
+  .login-card h1 {
+    font-size: 18px;
+    margin: 0 0 4px;
+  }
+  .login-card p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0 0 24px;
+  }
+  label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 14px 0 6px;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: var(--ink);
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  button.primary {
+    margin-top: 22px;
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { opacity: 0.92; }
+  button.primary:disabled { opacity: 0.5; cursor: default; }
+
+  .error {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--danger);
+  }
+
+  /* Dashboard */
+  h2 { font-size: 16px; margin: 0 0 4px; }
+  .section-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 20px; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 28px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+  ul.profile-list { list-style: none; padding: 0; margin: 0; }
+  ul.profile-list li {
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  ul.profile-list li:last-child { border-bottom: none; }
+  .profile-name { font-weight: 600; }
+  .profile-meta { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .profile-actions { display: flex; align-items: center; gap: 8px; }
+  .link-btn {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .link-btn:hover { background: var(--accent-soft); }
+  .link-row {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .link-row.open { display: flex; }
+  .site-choices { display: flex; gap: 6px; }
+  .site-choices button {
+    flex: 1;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 6px;
+    padding: 7px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+  .site-choices button:hover { border-color: var(--accent); color: var(--accent); }
+  .generated-link {
+    display: none;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    word-break: break-all;
+    color: var(--ink);
+  }
+  .generated-link.show { display: block; }
+  .copy-btn {
+    margin-top: 6px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .expira-info { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+  ul.profile-list li { flex-direction: column; align-items: stretch; }
+  .profile-top-row { display: flex; justify-content: space-between; align-items: center; }
+</style>
+</head>
+<body>
+
+<div id="login-view">
+  <div class="cloud-layer">
+    <div class="cloud cloud-a"></div>
+    <div class="cloud cloud-b"></div>
+    <div class="cloud cloud-c"></div>
+    <div class="cloud cloud-d"></div>
+  </div>
+  <main style="padding:0;">
+    <div class="login-card">
+      <h1>Hub</h1>
+      <p>Entre com sua conta para gerenciar perfis.</p>
+      <form id="login-form">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" required autocomplete="username">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" required autocomplete="current-password">
+        <button class="primary" type="submit" id="login-btn">Entrar</button>
+      </form>
+      <div class="error" id="login-error" style="display:none;"></div>
+      <p style="text-align:center; margin-top:18px; font-size:13px;">
+        <a href="#" id="show-request-link" style="color:var(--accent);">Solicitar acesso</a>
+      </p>
+
+      <form id="request-form" style="display:none;">
+        <label for="req-nome">Nome</label>
+        <input id="req-nome" type="text" required>
+        <label for="req-email">E-mail</label>
+        <input id="req-email" type="email" required>
+        <label for="req-senha">Senha</label>
+        <input id="req-senha" type="password" required minlength="6">
+        <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
+        <p style="text-align:center; margin-top:12px; font-size:13px;">
+          <a href="#" id="show-login-link" style="color:var(--accent);">Voltar para o login</a>
+        </p>
+      </form>
+      <div class="error" id="request-error" style="display:none;"></div>
+      <div id="request-success" style="display:none; margin-top:14px; font-size:13px; color:var(--accent);">
+        Pedido enviado! Assim que for aprovado, você já pode entrar com esse e-mail e senha.
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="app-view" style="display:none;">
+  <header>
+    <span class="brand">Hub</span>
+    <button id="logout-btn">Sair</button>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Novo perfil</h2>
+      <p class="section-sub">Cadastre uma pessoa para depois gerar links de teste.</p>
+      <form id="profile-form">
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" required>
+        <div class="grid-2">
+          <div>
+            <label for="nascimento">Data de nascimento</label>
+            <input id="nascimento" type="date">
+          </div>
+          <div>
+            <label for="genero">Gênero</label>
+            <select id="genero">
+              <option value="">Não informado</option>
+              <option value="feminino">Feminino</option>
+              <option value="masculino">Masculino</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+        </div>
+        <button class="primary" type="submit" id="save-btn">Salvar perfil</button>
+      </form>
+      <div class="error" id="profile-error" style="display:none;"></div>
+    </div>
+
+    <div class="card" id="pending-card" style="display:none;">
+      <h2>Pedidos pendentes</h2>
+      <p class="section-sub">Pessoas aguardando aprovação para acessar o hub.</p>
+      <ul class="profile-list" id="pending-list"></ul>
+    </div>
+
+    <div class="card">
+      <h2>Perfis cadastrados</h2>
+      <p class="section-sub" id="count-sub">&nbsp;</p>
+      <ul class="profile-list" id="profile-list"></ul>
+      <div class="empty" id="empty-msg" style="display:none;">Nenhum perfil cadastrado ainda.</div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://bjzmlvsskhfrkvblvsjj.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_YEHAM35S4jsY_dKoN5mwzg_YOVoVWJR";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const loginView = document.getElementById('login-view');
+  const appView = document.getElementById('app-view');
+  const loginForm = document.getElementById('login-form');
+  const loginError = document.getElementById('login-error');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const profileForm = document.getElementById('profile-form');
+  const profileError = document.getElementById('profile-error');
+  const saveBtn = document.getElementById('save-btn');
+  const profileList = document.getElementById('profile-list');
+  const emptyMsg = document.getElementById('empty-msg');
+  const countSub = document.getElementById('count-sub');
+
+  const EDGE_BASE = SUPABASE_URL + '/functions/v1';
+
+  function showApp() {
+    loginView.style.display = 'none';
+    appView.style.display = 'block';
+    loadProfiles();
+    loadPending();
+  }
+  function showLogin() {
+    appView.style.display = 'none';
+    loginView.style.display = 'flex';
+  }
+
+  // Alternar entre login e "solicitar acesso"
+  const showRequestLink = document.getElementById('show-request-link');
+  const showLoginLink = document.getElementById('show-login-link');
+  const requestForm = document.getElementById('request-form');
+  const requestError = document.getElementById('request-error');
+  const requestSuccess = document.getElementById('request-success');
+  const requestBtn = document.getElementById('request-btn');
+
+  showRequestLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginForm.style.display = 'none';
+    showRequestLink.parentElement.style.display = 'none';
+    requestForm.style.display = 'block';
+    requestSuccess.style.display = 'none';
+  });
+  showLoginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    requestForm.style.display = 'none';
+    loginForm.style.display = 'block';
+    showRequestLink.parentElement.style.display = 'block';
+  });
+
+  requestForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    requestError.style.display = 'none';
+    requestBtn.disabled = true;
+    requestBtn.textContent = 'Enviando...';
+
+    const nome = document.getElementById('req-nome').value.trim();
+    const email = document.getElementById('req-email').value.trim();
+    const senha = document.getElementById('req-senha').value;
+
+    try {
+      const res = await fetch(EDGE_BASE + '/solicitar-acesso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+        body: JSON.stringify({ nome, email, senha })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Não foi possível enviar o pedido.');
+
+      requestForm.reset();
+      requestForm.style.display = 'none';
+      requestSuccess.style.display = 'block';
+    } catch (err) {
+      requestError.textContent = err.message;
+      requestError.style.display = 'block';
+    } finally {
+      requestBtn.disabled = false;
+      requestBtn.textContent = 'Enviar pedido';
+    }
+  });
+
+  async function loadPending() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const pendingCard = document.getElementById('pending-card');
+    const pendingList = document.getElementById('pending-list');
+
+    try {
+      const res = await fetch(EDGE_BASE + '/listar-pendentes', {
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'apikey': SUPABASE_KEY }
+      });
+      const json = await res.json();
+      const pendentes = json.pendentes || [];
+
+      pendingCard.style.display = pendentes.length > 0 ? 'block' : 'none';
+      pendingList.innerHTML = '';
+
+      pendentes.forEach(p => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div>
+            <div class="profile-name">${escapeHtml(p.nome || p.email)}</div>
+            <div class="profile-meta">${escapeHtml(p.email)}</div>
+          </div>
+          <div>
+            <button class="approve-btn" data-id="${p.id}" style="border:1px solid var(--accent); color:var(--accent); background:none; border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer; margin-right:6px;">Aprovar</button>
+            <button class="reject-btn" data-id="${p.id}" style="border:1px solid var(--danger); color:var(--danger); background:none; border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer;">Recusar</button>
+          </div>
+        `;
+        pendingList.appendChild(li);
+      });
+
+      pendingList.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.addEventListener('click', () => responderPedido(btn.dataset.id, 'aprovar'));
+      });
+      pendingList.querySelectorAll('.reject-btn').forEach(btn => {
+        btn.addEventListener('click', () => responderPedido(btn.dataset.id, 'recusar'));
+      });
+    } catch (err) {
+      pendingCard.style.display = 'none';
+    }
+  }
+
+  async function responderPedido(id, acao) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    await fetch(EDGE_BASE + '/responder-pedido', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session.access_token,
+        'apikey': SUPABASE_KEY
+      },
+      body: JSON.stringify({ id, acao })
+    });
+    loadPending();
+  }
+
+  // Check existing session on load
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) showApp(); else showLogin();
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.style.display = 'none';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Entrando...';
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Entrar';
+    if (error) {
+      loginError.textContent = 'E-mail ou senha incorretos.';
+      loginError.style.display = 'block';
+      return;
+    }
+    showApp();
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await sb.auth.signOut();
+    showLogin();
+  });
+
+  profileForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    profileError.style.display = 'none';
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Salvando...';
+
+    const nome = document.getElementById('nome').value.trim();
+    const nascimento = document.getElementById('nascimento').value || null;
+    const genero = document.getElementById('genero').value || null;
+
+    const { error } = await sb.from('perfis').insert({
+      nome,
+      data_nascimento: nascimento,
+      genero
+    });
+
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Salvar perfil';
+
+    if (error) {
+      profileError.textContent = 'Não foi possível salvar: ' + error.message;
+      profileError.style.display = 'block';
+      return;
+    }
+
+    profileForm.reset();
+    loadProfiles();
+  });
+
+  async function loadProfiles() {
+    const { data, error } = await sb
+      .from('perfis')
+      .select('*')
+      .order('criado_em', { ascending: false });
+
+    profileList.innerHTML = '';
+
+    if (error) {
+      countSub.textContent = 'Erro ao carregar perfis.';
+      return;
+    }
+
+    countSub.textContent = data.length === 1 ? '1 perfil' : data.length + ' perfis';
+    emptyMsg.style.display = data.length === 0 ? 'block' : 'none';
+
+    data.forEach(p => {
+      const li = document.createElement('li');
+      const meta = [];
+      if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
+      if (p.genero) meta.push(capitalize(p.genero));
+      li.innerHTML = `
+        <div class="profile-top-row">
+          <div>
+            <div class="profile-name">${escapeHtml(p.nome)}</div>
+            <div class="profile-meta">${meta.join(' · ') || '—'}</div>
+          </div>
+          <div class="profile-actions">
+            <button class="link-btn" data-toggle="${p.id}">Gerar link</button>
+          </div>
+        </div>
+        <div class="link-row" id="link-row-${p.id}">
+          <div class="site-choices">
+            <button data-site="cubos" data-perfil="${p.id}">Cubos</button>
+            <button data-site="adf" data-perfil="${p.id}">Adf</button>
+            <button data-site="ao" data-perfil="${p.id}">Ao</button>
+          </div>
+          <div class="generated-link" id="generated-link-${p.id}"></div>
+        </div>
+      `;
+      profileList.appendChild(li);
+    });
+
+    profileList.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = document.getElementById('link-row-' + btn.dataset.toggle);
+        row.classList.toggle('open');
+      });
+    });
+
+    profileList.querySelectorAll('[data-site]').forEach(btn => {
+      btn.addEventListener('click', () => gerarLink(btn.dataset.perfil, btn.dataset.site));
+    });
+  }
+
+  const SITE_URLS = {
+    cubos: 'https://katw24.github.io/cubos/',
+    adf: 'https://katw24.github.io/adf/',
+    ao: 'https://katw24.github.io/ao/'
+  };
+
+  async function gerarLink(perfilId, site) {
+    const box = document.getElementById('generated-link-' + perfilId);
+    box.classList.add('show');
+    box.innerHTML = 'Gerando...';
+
+    const token = crypto.randomUUID();
+    const expiraEm = new Date(Date.now() + 90 * 60 * 1000).toISOString();
+
+    const { error } = await sb.from('sessoes').insert({
+      perfil_id: perfilId,
+      site,
+      token,
+      expira_em: expiraEm
+    });
+
+    if (error) {
+      box.innerHTML = 'Erro ao gerar link: ' + error.message;
+      return;
+    }
+
+    const link = SITE_URLS[site] + '?t=' + token;
+
+    let linkParaMostrar = link;
+    let avisoEncurtador = '';
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const res = await fetch(EDGE_BASE + '/encurtar-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + session.access_token,
+          'apikey': SUPABASE_KEY
+        },
+        body: JSON.stringify({ url: link })
+      });
+      const json = await res.json();
+      if (res.ok && json.curto) {
+        linkParaMostrar = json.curto;
+        await sb.from('sessoes').update({ link_curto: json.curto }).eq('token', token);
+      } else {
+        avisoEncurtador = json.error || 'não foi possível encurtar agora';
+      }
+    } catch (e) {
+      avisoEncurtador = e.message;
+    }
+
+    box.innerHTML = `
+      <div>${linkParaMostrar}</div>
+      <button class="copy-btn" data-link="${linkParaMostrar}">Copiar link</button>
+      <div class="expira-info">Expira em 1h30 · uso único</div>
+      ${avisoEncurtador ? `<div class="expira-info" style="color:var(--danger);">Link curto indisponível: ${escapeHtml(avisoEncurtador)}</div>` : ''}
+    `;
+    box.querySelector('.copy-btn').addEventListener('click', (e) => {
+      navigator.clipboard.writeText(e.target.dataset.link);
+      e.target.textContent = 'Copiado!';
+      setTimeout(() => { e.target.textContent = 'Copiar link'; }, 1500);
+    });
+  }
+
+  function formatDate(iso) {
+    const [y, m, d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  }
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function escapeHtml(s) {
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>
