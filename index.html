@@ -255,6 +255,73 @@
   .expira-info { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
   ul.profile-list li { flex-direction: column; align-items: stretch; }
   .profile-top-row { display: flex; justify-content: space-between; align-items: center; }
+
+  .sessoes-list { margin-top: 12px; display: none; flex-direction: column; gap: 8px; }
+  .sessoes-list.open { display: flex; }
+  .sessao-item {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .status-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .status-concluido { background: #e3eff8; color: var(--accent); }
+  .status-pendente { background: #fdf3e3; color: #9a6a1f; }
+  .status-expirado { background: #f3e5e3; color: var(--danger); }
+  .ver-prints-btn {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(20,30,40,0.55);
+    align-items: center; justify-content: center;
+    z-index: 999999;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff;
+    border-radius: 14px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 22px;
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .modal-close {
+    border: none; background: none; font-size: 20px; cursor: pointer; color: var(--ink-soft);
+  }
+  .prints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  .print-card { text-align: center; }
+  .print-card img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .print-card .etapa-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -347,6 +414,16 @@
       <div class="empty" id="empty-msg" style="display:none;">Nenhum perfil cadastrado ainda.</div>
     </div>
   </main>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-title">Prints da sessão</h2>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="prints-grid" id="prints-grid"></div>
+  </div>
 </div>
 
 <script>
@@ -578,6 +655,7 @@
           </div>
           <div class="profile-actions">
             <button class="link-btn" data-toggle="${p.id}">Gerar link</button>
+            <button class="link-btn" data-sessoes="${p.id}">Ver sessões</button>
           </div>
         </div>
         <div class="link-row" id="link-row-${p.id}">
@@ -588,8 +666,13 @@
           </div>
           <div class="generated-link" id="generated-link-${p.id}"></div>
         </div>
+        <div class="sessoes-list" id="sessoes-list-${p.id}"></div>
       `;
       profileList.appendChild(li);
+    });
+
+    profileList.querySelectorAll('[data-sessoes]').forEach(btn => {
+      btn.addEventListener('click', () => toggleSessoes(btn.dataset.sessoes));
     });
 
     profileList.querySelectorAll('[data-toggle]').forEach(btn => {
@@ -669,6 +752,116 @@
     });
   }
 
+  async function toggleSessoes(perfilId) {
+    const container = document.getElementById('sessoes-list-' + perfilId);
+    const jaAberta = container.classList.contains('open');
+    if (jaAberta) {
+      container.classList.remove('open');
+      return;
+    }
+    container.classList.add('open');
+    container.innerHTML = '<div class="empty">Carregando...</div>';
+
+    const { data: { session } } = await sb.auth.getSession();
+    try {
+      const res = await fetch(EDGE_BASE + '/listar-sessoes-perfil', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + session.access_token,
+          'apikey': SUPABASE_KEY
+        },
+        body: JSON.stringify({ perfil_id: perfilId })
+      });
+      const json = await res.json();
+      const sessoes = json.sessoes || [];
+
+      if (sessoes.length === 0) {
+        container.innerHTML = '<div class="empty">Nenhum link gerado ainda para este perfil.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      sessoes.forEach(s => {
+        const expirado = !s.concluido && new Date(s.expira_em).getTime() < Date.now();
+        const statusClasse = s.concluido ? 'status-concluido' : (expirado ? 'status-expirado' : 'status-pendente');
+        const statusTexto = s.concluido ? 'Concluído' : (expirado ? 'Expirado' : 'Em aberto');
+        const div = document.createElement('div');
+        div.className = 'sessao-item';
+        div.innerHTML = `
+          <div>
+            <strong>${capitalize(s.site)}</strong>
+            <span class="status-tag ${statusClasse}">${statusTexto}</span>
+            <div class="expira-info">${formatDateTime(s.criado_em)}</div>
+          </div>
+          <button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>
+        `;
+        container.appendChild(div);
+      });
+
+      container.querySelectorAll('.ver-prints-btn').forEach(btn => {
+        btn.addEventListener('click', () => abrirGaleria(btn.dataset.sessao, btn.dataset.site));
+      });
+    } catch (e) {
+      container.innerHTML = '<div class="empty">Erro ao carregar sessões.</div>';
+    }
+  }
+
+  async function abrirGaleria(sessaoId, site) {
+    const overlay = document.getElementById('modal-overlay');
+    const grid = document.getElementById('prints-grid');
+    const title = document.getElementById('modal-title');
+    title.textContent = 'Prints — ' + capitalize(site);
+    grid.innerHTML = '<div class="empty">Carregando prints...</div>';
+    overlay.classList.add('open');
+
+    const { data: { session } } = await sb.auth.getSession();
+    try {
+      const res = await fetch(EDGE_BASE + '/listar-prints-sessao', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + session.access_token,
+          'apikey': SUPABASE_KEY
+        },
+        body: JSON.stringify({ sessao_id: sessaoId })
+      });
+      const json = await res.json();
+      const prints = json.prints || [];
+
+      if (prints.length === 0) {
+        grid.innerHTML = '<div class="empty">Nenhum print salvo para esta sessão ainda.</div>';
+        return;
+      }
+
+      grid.innerHTML = '';
+      prints.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'print-card';
+        card.innerHTML = `
+          <img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">
+          <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
+        `;
+        card.querySelector('img').addEventListener('click', () => window.open(p.url, '_blank'));
+        grid.appendChild(card);
+      });
+    } catch (e) {
+      grid.innerHTML = '<div class="empty">Erro ao carregar prints.</div>';
+    }
+  }
+
+  document.getElementById('modal-close').addEventListener('click', () => {
+    document.getElementById('modal-overlay').classList.remove('open');
+  });
+  document.getElementById('modal-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'modal-overlay') e.target.classList.remove('open');
+  });
+
+  function formatDateTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
   function formatDate(iso) {
     const [y, m, d] = iso.split('-');
     return `${d}/${m}/${y}`;
@@ -682,3 +875,4 @@
 </script>
 
 </body>
+</html>
