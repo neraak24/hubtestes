@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -322,6 +322,38 @@
     cursor: pointer;
   }
   .print-card .etapa-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+
+  .cubo-mini-wrap {
+    perspective: 400px;
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f7fa;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .cubo-mini-scene {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+  .cubo-mini-face {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 1px solid rgba(47,102,144,0.5);
+    background: rgba(47,102,144,0.18);
+  }
+  .cubo-mini-front  { transform: translateZ(25px); }
+  .cubo-mini-back   { transform: rotateY(180deg) translateZ(25px); }
+  .cubo-mini-right  { transform: rotateY(90deg) translateZ(25px); }
+  .cubo-mini-left   { transform: rotateY(-90deg) translateZ(25px); }
+  .cubo-mini-top    { transform: rotateX(90deg) translateZ(25px); }
+  .cubo-mini-bottom { transform: rotateX(-90deg) translateZ(25px); }
+  .cubos-mini-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -838,7 +870,25 @@
       prints.forEach(p => {
         const card = document.createElement('div');
         card.className = 'print-card';
+
+        let cubosHtml = '';
+        if (p.dados_cubo && Array.isArray(p.dados_cubo) && p.dados_cubo.length > 0) {
+          cubosHtml = '<div class="cubos-mini-row">' + p.dados_cubo.map(c => `
+            <div class="cubo-mini-wrap" title="Cubo ${c.cubo}">
+              <div class="cubo-mini-scene" style="transform: rotateZ(${c.sceneRotation || 0}deg) rotateX(${-(c.rotationX || 0)}deg) rotateY(${c.rotationY || 0}deg);">
+                <div class="cubo-mini-face cubo-mini-front"></div>
+                <div class="cubo-mini-face cubo-mini-back"></div>
+                <div class="cubo-mini-face cubo-mini-right"></div>
+                <div class="cubo-mini-face cubo-mini-left"></div>
+                <div class="cubo-mini-face cubo-mini-top"></div>
+                <div class="cubo-mini-face cubo-mini-bottom"></div>
+              </div>
+            </div>
+          `).join('') + '</div>';
+        }
+
         card.innerHTML = `
+          ${cubosHtml}
           <img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">
           <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
         `;
