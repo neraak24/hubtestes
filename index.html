@@ -439,11 +439,37 @@
       <ul class="profile-list" id="pending-list"></ul>
     </div>
 
-    <div class="card">
+    <div class="card" id="lista-perfis-card">
       <h2>Perfis cadastrados</h2>
       <p class="section-sub" id="count-sub">&nbsp;</p>
       <ul class="profile-list" id="profile-list"></ul>
       <div class="empty" id="empty-msg" style="display:none;">Nenhum perfil cadastrado ainda.</div>
+    </div>
+  </main>
+
+  <main id="perfil-detail-view" style="display:none;">
+    <button id="voltar-lista-btn" class="link-btn" style="margin-bottom:16px;">← Voltar aos perfis</button>
+
+    <div class="card">
+      <h2 id="detalhe-nome">&nbsp;</h2>
+      <p class="section-sub" id="detalhe-meta">&nbsp;</p>
+    </div>
+
+    <div class="card">
+      <h2>Gerar link</h2>
+      <p class="section-sub">Escolha o site para criar um link individual e temporário.</p>
+      <div class="site-choices">
+        <button id="detalhe-site-cubos">Cubos</button>
+        <button id="detalhe-site-adf">Adf</button>
+        <button id="detalhe-site-ao">Ao</button>
+      </div>
+      <div class="generated-link" id="detalhe-generated-link"></div>
+    </div>
+
+    <div class="card">
+      <h2>Sessões</h2>
+      <p class="section-sub">Links já gerados para este perfil e seus resultados.</p>
+      <div class="sessoes-list open" id="detalhe-sessoes-list"></div>
     </div>
   </main>
 </div>
@@ -680,44 +706,56 @@
       if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
       if (p.genero) meta.push(capitalize(p.genero));
       li.innerHTML = `
-        <div class="profile-top-row">
+        <div class="profile-top-row" style="cursor:pointer;">
           <div>
             <div class="profile-name">${escapeHtml(p.nome)}</div>
             <div class="profile-meta">${meta.join(' · ') || '—'}</div>
           </div>
           <div class="profile-actions">
-            <button class="link-btn" data-toggle="${p.id}">Gerar link</button>
-            <button class="link-btn" data-sessoes="${p.id}">Ver sessões</button>
+            <button class="link-btn">Abrir perfil →</button>
           </div>
         </div>
-        <div class="link-row" id="link-row-${p.id}">
-          <div class="site-choices">
-            <button data-site="cubos" data-perfil="${p.id}">Cubos</button>
-            <button data-site="adf" data-perfil="${p.id}">Adf</button>
-            <button data-site="ao" data-perfil="${p.id}">Ao</button>
-          </div>
-          <div class="generated-link" id="generated-link-${p.id}"></div>
-        </div>
-        <div class="sessoes-list" id="sessoes-list-${p.id}"></div>
       `;
+      li.addEventListener('click', () => abrirPerfil(p));
       profileList.appendChild(li);
     });
-
-    profileList.querySelectorAll('[data-sessoes]').forEach(btn => {
-      btn.addEventListener('click', () => toggleSessoes(btn.dataset.sessoes));
-    });
-
-    profileList.querySelectorAll('[data-toggle]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const row = document.getElementById('link-row-' + btn.dataset.toggle);
-        row.classList.toggle('open');
-      });
-    });
-
-    profileList.querySelectorAll('[data-site]').forEach(btn => {
-      btn.addEventListener('click', () => gerarLink(btn.dataset.perfil, btn.dataset.site));
-    });
   }
+
+  let perfilAtual = null;
+
+  function abrirPerfil(p) {
+    perfilAtual = p;
+    document.getElementById('lista-perfis-card').style.display = 'none';
+    document.getElementById('pending-card').style.display = 'none';
+    document.querySelector('#app-view form#profile-form').closest('.card').style.display = 'none';
+    document.getElementById('perfil-detail-view').style.display = 'block';
+
+    const meta = [];
+    if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
+    if (p.genero) meta.push(capitalize(p.genero));
+    document.getElementById('detalhe-nome').textContent = p.nome;
+    document.getElementById('detalhe-meta').textContent = meta.join(' · ') || '—';
+    document.getElementById('detalhe-generated-link').classList.remove('show');
+    document.getElementById('detalhe-generated-link').innerHTML = '';
+
+    carregarSessoesDetalhe(p.id);
+    location.hash = 'perfil-' + p.id;
+  }
+
+  function voltarLista() {
+    perfilAtual = null;
+    document.getElementById('perfil-detail-view').style.display = 'none';
+    document.getElementById('lista-perfis-card').style.display = 'block';
+    document.querySelector('#app-view form#profile-form').closest('.card').style.display = 'block';
+    location.hash = '';
+    loadPending();
+  }
+
+  document.getElementById('voltar-lista-btn').addEventListener('click', voltarLista);
+
+  document.getElementById('detalhe-site-cubos').addEventListener('click', () => gerarLinkDetalhe('cubos'));
+  document.getElementById('detalhe-site-adf').addEventListener('click', () => gerarLinkDetalhe('adf'));
+  document.getElementById('detalhe-site-ao').addEventListener('click', () => gerarLinkDetalhe('ao'));
 
   const SITE_URLS = {
     cubos: 'https://neraak24.github.io/cubos/',
@@ -725,8 +763,10 @@
     ao: 'https://neraak24.github.io/ao/'
   };
 
-  async function gerarLink(perfilId, site) {
-    const box = document.getElementById('generated-link-' + perfilId);
+  async function gerarLinkDetalhe(site) {
+    if (!perfilAtual) return;
+    const perfilId = perfilAtual.id;
+    const box = document.getElementById('detalhe-generated-link');
     box.classList.add('show');
     box.innerHTML = 'Gerando...';
 
@@ -782,16 +822,11 @@
       e.target.textContent = 'Copiado!';
       setTimeout(() => { e.target.textContent = 'Copiar link'; }, 1500);
     });
+    carregarSessoesDetalhe(perfilId);
   }
 
-  async function toggleSessoes(perfilId) {
-    const container = document.getElementById('sessoes-list-' + perfilId);
-    const jaAberta = container.classList.contains('open');
-    if (jaAberta) {
-      container.classList.remove('open');
-      return;
-    }
-    container.classList.add('open');
+  async function carregarSessoesDetalhe(perfilId) {
+    const container = document.getElementById('detalhe-sessoes-list');
     container.innerHTML = '<div class="empty">Carregando...</div>';
 
     const { data: { session } } = await sb.auth.getSession();
