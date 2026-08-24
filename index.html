@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -873,9 +873,12 @@
 
         let cubosHtml = '';
         if (p.dados_cubo && Array.isArray(p.dados_cubo) && p.dados_cubo.length > 0) {
-          cubosHtml = '<div class="cubos-mini-row">' + p.dados_cubo.map(c => `
+          cubosHtml = '<div class="cubos-mini-row">' + p.dados_cubo.map(c => {
+            const offX = Math.max(-30, Math.min(30, (c.offsetX || 0) * 0.15));
+            const offY = Math.max(-25, Math.min(25, (c.offsetY || 0) * 0.15));
+            return `
             <div class="cubo-mini-wrap" title="Cubo ${c.cubo}">
-              <div class="cubo-mini-scene" style="transform: rotateZ(${c.sceneRotation || 0}deg) rotateX(${-(c.rotationX || 0)}deg) rotateY(${c.rotationY || 0}deg);">
+              <div class="cubo-mini-scene" style="transform: translate(${offX}px, ${offY}px) rotateZ(${c.sceneRotation || 0}deg) rotateX(${-(c.rotationX || 0)}deg) rotateY(${c.rotationY || 0}deg);">
                 <div class="cubo-mini-face cubo-mini-front"></div>
                 <div class="cubo-mini-face cubo-mini-back"></div>
                 <div class="cubo-mini-face cubo-mini-right"></div>
@@ -884,7 +887,8 @@
                 <div class="cubo-mini-face cubo-mini-bottom"></div>
               </div>
             </div>
-          `).join('') + '</div>';
+          `;
+          }).join('') + '</div>';
         }
 
         card.innerHTML = `
