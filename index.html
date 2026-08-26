@@ -354,6 +354,21 @@
   .cubo-mini-top    { transform: rotateX(90deg) translateZ(25px); }
   .cubo-mini-bottom { transform: rotateX(-90deg) translateZ(25px); }
   .cubos-mini-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+
+  .montagem-2d {
+    position: relative;
+    margin: 0 auto 4px;
+    background: #f3f7fa;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .peca-2d {
+    position: absolute;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(47,102,144,0.35);
+    box-sizing: border-box;
+  }
 </style>
 </head>
 <body>
@@ -907,31 +922,37 @@
         card.className = 'print-card';
 
         let cubosHtml = '';
-        if (p.dados_cubo && Array.isArray(p.dados_cubo) && p.dados_cubo.length > 0) {
-          cubosHtml = '<div class="cubos-mini-row">' + p.dados_cubo.map(c => {
-            const offX = Math.max(-30, Math.min(30, (c.offsetX || 0) * 0.15));
-            const offY = Math.max(-25, Math.min(25, (c.offsetY || 0) * 0.15));
-            return `
-            <div class="cubo-mini-wrap" title="Cubo ${c.cubo}">
-              <div class="cubo-mini-scene" style="transform: translate(${offX}px, ${offY}px) rotateZ(${c.sceneRotation || 0}deg) rotateX(${-(c.rotationX || 0)}deg) rotateY(${c.rotationY || 0}deg);">
-                <div class="cubo-mini-face cubo-mini-front"></div>
-                <div class="cubo-mini-face cubo-mini-back"></div>
-                <div class="cubo-mini-face cubo-mini-right"></div>
-                <div class="cubo-mini-face cubo-mini-left"></div>
-                <div class="cubo-mini-face cubo-mini-top"></div>
-                <div class="cubo-mini-face cubo-mini-bottom"></div>
-              </div>
-            </div>
-          `;
-          }).join('') + '</div>';
+        const pecasValidas = p.dados_cubo && Array.isArray(p.dados_cubo)
+          ? p.dados_cubo.filter(c => c.imagem && typeof c.x === 'number')
+          : [];
+
+        if (pecasValidas.length > 0) {
+          const minX = Math.min(...pecasValidas.map(c => c.x));
+          const minY = Math.min(...pecasValidas.map(c => c.y));
+          const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
+          const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
+          const largura = Math.max(1, maxX - minX);
+          const altura = Math.max(1, maxY - minY);
+          const escala = Math.min(180 / largura, 130 / altura, 1.5);
+
+          const pecas = pecasValidas.map(c => {
+            const left = (c.x - minX) * escala;
+            const top = (c.y - minY) * escala;
+            const w = c.w * escala;
+            const h = c.h * escala;
+            return `<div class="peca-2d" style="left:${left}px; top:${top}px; width:${w}px; height:${h}px; background-image:url('${c.imagem}');"></div>`;
+          }).join('');
+
+          cubosHtml = `<div class="montagem-2d" style="width:${largura * escala}px; height:${altura * escala}px;">${pecas}</div>`;
         }
 
         card.innerHTML = `
           ${cubosHtml}
-          <img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">
+          ${cubosHtml ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
           <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
         `;
-        card.querySelector('img').addEventListener('click', () => window.open(p.url, '_blank'));
+        const imgEl = card.querySelector('img');
+        if (imgEl) imgEl.addEventListener('click', () => window.open(p.url, '_blank'));
         grid.appendChild(card);
       });
     } catch (e) {
