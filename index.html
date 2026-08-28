@@ -427,6 +427,29 @@
     border: 1px solid rgba(47,102,144,0.35);
     box-sizing: border-box;
   }
+  .sequencia-numeros {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 14px 6px;
+    background: #f3f7fa;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .chip-numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--title-font);
+    font-size: 13px;
+  }
 </style>
 </head>
 <body>
@@ -980,34 +1003,44 @@
         card.className = 'print-card';
 
         let cubosHtml = '';
-        const pecasValidas = p.dados_cubo && Array.isArray(p.dados_cubo)
-          ? p.dados_cubo.filter(c => c.imagem && typeof c.x === 'number')
-          : [];
 
-        if (pecasValidas.length > 0) {
-          const minX = Math.min(...pecasValidas.map(c => c.x));
-          const minY = Math.min(...pecasValidas.map(c => c.y));
-          const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
-          const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
-          const largura = Math.max(1, maxX - minX);
-          const altura = Math.max(1, maxY - minY);
-          const escala = Math.min(180 / largura, 130 / altura, 1.5);
+        const ehSequencia = p.dados_cubo && !Array.isArray(p.dados_cubo) && p.dados_cubo.tipo === 'sequencia';
 
-          const pecas = pecasValidas.map(c => {
-            const left = (c.x - minX) * escala;
-            const top = (c.y - minY) * escala;
-            const w = c.w * escala;
-            const h = c.h * escala;
-            const rot = c.rotacao || 0;
-            return `<div class="peca-2d" style="left:${left}px; top:${top}px; width:${w}px; height:${h}px; background-image:url('${c.imagem}'); transform: rotate(${rot}deg);"></div>`;
-          }).join('');
+        if (ehSequencia) {
+          const chips = p.dados_cubo.ordem_final.map(n =>
+            `<span class="chip-numero">${escapeHtml(String(n))}</span>`
+          ).join('');
+          cubosHtml = `<div class="sequencia-numeros">${chips}</div>`;
+        } else {
+          const pecasValidas = p.dados_cubo && Array.isArray(p.dados_cubo)
+            ? p.dados_cubo.filter(c => c.imagem && typeof c.x === 'number')
+            : [];
 
-          cubosHtml = `<div class="montagem-2d" style="width:${largura * escala}px; height:${altura * escala}px;">${pecas}</div>`;
+          if (pecasValidas.length > 0) {
+            const minX = Math.min(...pecasValidas.map(c => c.x));
+            const minY = Math.min(...pecasValidas.map(c => c.y));
+            const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
+            const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
+            const largura = Math.max(1, maxX - minX);
+            const altura = Math.max(1, maxY - minY);
+            const escala = Math.min(180 / largura, 130 / altura, 1.5);
+
+            const pecas = pecasValidas.map(c => {
+              const left = (c.x - minX) * escala;
+              const top = (c.y - minY) * escala;
+              const w = c.w * escala;
+              const h = c.h * escala;
+              const rot = c.rotacao || 0;
+              return `<div class="peca-2d" style="left:${left}px; top:${top}px; width:${w}px; height:${h}px; background-image:url('${c.imagem}'); transform: rotate(${rot}deg);"></div>`;
+            }).join('');
+
+            cubosHtml = `<div class="montagem-2d" style="width:${largura * escala}px; height:${altura * escala}px;">${pecas}</div>`;
+          }
         }
 
         card.innerHTML = `
           ${cubosHtml}
-          ${cubosHtml ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
+          ${(cubosHtml || !p.url) ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
           <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
         `;
         const imgEl = card.querySelector('img');
