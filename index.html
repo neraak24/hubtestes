@@ -978,8 +978,10 @@
         card.className = 'print-card';
 
         let cubosHtml = '';
+        let tempoHtml = '';
 
         const ehSequencia = p.dados_cubo && !Array.isArray(p.dados_cubo) && p.dados_cubo.tipo === 'sequencia';
+        const ehMontagem = p.dados_cubo && !Array.isArray(p.dados_cubo) && p.dados_cubo.tipo === 'montagem';
 
         if (ehSequencia) {
           const chips = p.dados_cubo.ordem_final.map(n =>
@@ -987,18 +989,39 @@
           ).join('');
           cubosHtml = `<div class="sequencia-numeros">${chips}</div>`;
         } else {
-          const pecasValidas = p.dados_cubo && Array.isArray(p.dados_cubo)
-            ? p.dados_cubo.filter(c => c.imagem && typeof c.x === 'number')
-            : [];
+          const listaPecas = ehMontagem ? (p.dados_cubo.pecas || []) : (Array.isArray(p.dados_cubo) ? p.dados_cubo : []);
+          const pecasValidas = listaPecas.filter(c => c.imagem && typeof c.x === 'number');
+
+          if (ehMontagem && typeof p.dados_cubo.tempo_segundos === 'number') {
+            const s = p.dados_cubo.tempo_segundos;
+            const mm = String(Math.floor(s / 60)).padStart(2, '0');
+            const ss = String(s % 60).padStart(2, '0');
+            tempoHtml = `<div class="expira-info">⏱ ${mm}:${ss}</div>`;
+          }
 
           if (pecasValidas.length > 0) {
-            const minX = Math.min(...pecasValidas.map(c => c.x));
-            const minY = Math.min(...pecasValidas.map(c => c.y));
-            const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
-            const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
-            const largura = Math.max(1, maxX - minX);
-            const altura = Math.max(1, maxY - minY);
-            const escala = Math.min(180 / largura, 130 / altura, 1.5);
+            let minX, minY, largura, altura;
+
+            if (ehMontagem && p.dados_cubo.viewport_w && p.dados_cubo.viewport_h) {
+              minX = 0;
+              minY = 0;
+              largura = p.dados_cubo.viewport_w;
+              altura = p.dados_cubo.viewport_h;
+            } else {
+              minX = Math.min(...pecasValidas.map(c => c.x));
+              minY = Math.min(...pecasValidas.map(c => c.y));
+              const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
+              const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
+              largura = Math.max(1, maxX - minX);
+              altura = Math.max(1, maxY - minY);
+            }
+
+            let escala;
+            if (ehMontagem && p.dados_cubo.viewport_w && p.dados_cubo.viewport_h) {
+              escala = Math.min(220 / largura, 160 / altura);
+            } else {
+              escala = Math.min(180 / largura, 130 / altura, 1.5);
+            }
 
             const pecas = pecasValidas.map(c => {
               const left = (c.x - minX) * escala;
@@ -1017,6 +1040,7 @@
           ${cubosHtml}
           ${(cubosHtml || !p.url) ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
           <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
+          ${tempoHtml}
         `;
         const imgEl = card.querySelector('img');
         if (imgEl) imgEl.addEventListener('click', () => window.open(p.url, '_blank'));
