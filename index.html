@@ -855,7 +855,7 @@
 
   const SITE_URLS = {
     cubos: 'https://cubosw.netlify.app/',
-    adf: 'https://neraak24.github.io/adf/',
+    adf: 'https://adfwss.netlify.app/',
     ao: 'https://neraak24.github.io/ao/'
   };
 
@@ -883,35 +883,10 @@
 
     const link = SITE_URLS[site] + '?t=' + token;
 
-    let linkParaMostrar = link;
-    let avisoEncurtador = '';
-    try {
-      const { data: { session } } = await sb.auth.getSession();
-      const res = await fetch(EDGE_BASE + '/encurtar-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + session.access_token,
-          'apikey': SUPABASE_KEY
-        },
-        body: JSON.stringify({ url: link })
-      });
-      const json = await res.json();
-      if (res.ok && json.curto) {
-        linkParaMostrar = json.curto;
-        await sb.from('sessoes').update({ link_curto: json.curto }).eq('token', token);
-      } else {
-        avisoEncurtador = json.error || 'não foi possível encurtar agora';
-      }
-    } catch (e) {
-      avisoEncurtador = e.message;
-    }
-
     box.innerHTML = `
-      <div>${linkParaMostrar}</div>
-      <button class="copy-btn" data-link="${linkParaMostrar}">Copiar link</button>
+      <div>${link}</div>
+      <button class="copy-btn" data-link="${link}">Copiar link</button>
       <div class="expira-info">Expira em 1h30 · uso único</div>
-      ${avisoEncurtador ? `<div class="expira-info" style="color:var(--danger);">Link curto indisponível: ${escapeHtml(avisoEncurtador)}</div>` : ''}
     `;
     box.querySelector('.copy-btn').addEventListener('click', (e) => {
       navigator.clipboard.writeText(e.target.dataset.link);
