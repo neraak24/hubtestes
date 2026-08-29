@@ -580,6 +580,16 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="zoom-overlay" style="z-index:9999999;">
+  <div class="modal-box" style="max-width:960px;">
+    <div class="modal-header">
+      <h2>Reconstrução ampliada</h2>
+      <button class="modal-close" id="zoom-close">✕</button>
+    </div>
+    <div id="zoom-content" style="display:flex; align-items:center; justify-content:center; overflow:auto;"></div>
+  </div>
+</div>
+
 <script>
   const SUPABASE_URL = "https://bjzmlvsskhfrkvblvsjj.supabase.co";
   const SUPABASE_KEY = "sb_publishable_YEHAM35S4jsY_dKoN5mwzg_YOVoVWJR";
@@ -947,7 +957,7 @@
 
   function abrirAmpliado(dados) {
     const { pecasValidas, minX, minY, largura, altura } = dados;
-    const escalaGrande = Math.min(900 / largura, 700 / altura);
+    const escalaGrande = Math.min(760 / largura, 560 / altura);
     const pecasHtml = pecasValidas.map(c => {
       const left = (c.x - minX) * escalaGrande;
       const top = (c.y - minY) * escalaGrande;
@@ -956,19 +966,20 @@
       const rot = c.rotacao || 0;
       return `<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px;background-image:url('${c.imagem}');background-size:cover;background-position:center;transform:rotate(${rot}deg);"></div>`;
     }).join('');
-    const janela = window.open('', '_blank');
-    janela.document.write(`
-      <html>
-        <head><title>Reconstrução ampliada</title></head>
-        <body style="margin:0; background:#f3f7fa; display:flex; align-items:center; justify-content:center; min-height:100vh;">
-          <div style="position:relative; width:${largura * escalaGrande}px; height:${altura * escalaGrande}px;">
-            ${pecasHtml}
-          </div>
-        </body>
-      </html>
-    `);
-    janela.document.close();
+    document.getElementById('zoom-content').innerHTML = `
+      <div style="position:relative; width:${largura * escalaGrande}px; height:${altura * escalaGrande}px; background:#f3f7fa; border-radius:8px;">
+        ${pecasHtml}
+      </div>
+    `;
+    document.getElementById('zoom-overlay').classList.add('open');
   }
+
+  document.getElementById('zoom-close').addEventListener('click', () => {
+    document.getElementById('zoom-overlay').classList.remove('open');
+  });
+  document.getElementById('zoom-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'zoom-overlay') e.target.classList.remove('open');
+  });
 
   async function abrirGaleria(sessaoId, site) {
     const overlay = document.getElementById('modal-overlay');
@@ -1071,7 +1082,10 @@
           ${tempoHtml}
         `;
         const imgEl = card.querySelector('img');
-        if (imgEl) imgEl.addEventListener('click', () => window.open(p.url, '_blank'));
+        if (imgEl) imgEl.addEventListener('click', () => {
+          document.getElementById('zoom-content').innerHTML = `<img src="${p.url}" style="max-width:100%; max-height:75vh; border-radius:8px;">`;
+          document.getElementById('zoom-overlay').classList.add('open');
+        });
         if (montagemDados) {
           const montagemEl = card.querySelector('.montagem-2d');
           if (montagemEl) montagemEl.addEventListener('click', () => abrirAmpliado(montagemDados));
