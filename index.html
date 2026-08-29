@@ -419,12 +419,12 @@
     background: #f3f7fa;
     border-radius: 8px;
     overflow: hidden;
+    cursor: zoom-in;
   }
   .peca-2d {
     position: absolute;
     background-size: cover;
     background-position: center;
-    border: 1px solid rgba(47,102,144,0.35);
     box-sizing: border-box;
   }
   .sequencia-numeros {
@@ -945,6 +945,31 @@
     }
   }
 
+  function abrirAmpliado(dados) {
+    const { pecasValidas, minX, minY, largura, altura } = dados;
+    const escalaGrande = Math.min(900 / largura, 700 / altura);
+    const pecasHtml = pecasValidas.map(c => {
+      const left = (c.x - minX) * escalaGrande;
+      const top = (c.y - minY) * escalaGrande;
+      const w = c.w * escalaGrande;
+      const h = c.h * escalaGrande;
+      const rot = c.rotacao || 0;
+      return `<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px;background-image:url('${c.imagem}');background-size:cover;background-position:center;transform:rotate(${rot}deg);"></div>`;
+    }).join('');
+    const janela = window.open('', '_blank');
+    janela.document.write(`
+      <html>
+        <head><title>Reconstrução ampliada</title></head>
+        <body style="margin:0; background:#f3f7fa; display:flex; align-items:center; justify-content:center; min-height:100vh;">
+          <div style="position:relative; width:${largura * escalaGrande}px; height:${altura * escalaGrande}px;">
+            ${pecasHtml}
+          </div>
+        </body>
+      </html>
+    `);
+    janela.document.close();
+  }
+
   async function abrirGaleria(sessaoId, site) {
     const overlay = document.getElementById('modal-overlay');
     const grid = document.getElementById('prints-grid');
@@ -976,6 +1001,8 @@
       prints.forEach(p => {
         const card = document.createElement('div');
         card.className = 'print-card';
+
+        let montagemDados = null;
 
         let cubosHtml = '';
         let tempoHtml = '';
@@ -1033,6 +1060,7 @@
             }).join('');
 
             cubosHtml = `<div class="montagem-2d" style="width:${largura * escala}px; height:${altura * escala}px;">${pecas}</div>`;
+            montagemDados = { pecasValidas, minX, minY, largura, altura };
           }
         }
 
@@ -1044,6 +1072,10 @@
         `;
         const imgEl = card.querySelector('img');
         if (imgEl) imgEl.addEventListener('click', () => window.open(p.url, '_blank'));
+        if (montagemDados) {
+          const montagemEl = card.querySelector('.montagem-2d');
+          if (montagemEl) montagemEl.addEventListener('click', () => abrirAmpliado(montagemDados));
+        }
         grid.appendChild(card);
       });
     } catch (e) {
