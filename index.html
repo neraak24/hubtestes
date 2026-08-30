@@ -80,7 +80,15 @@
   }
   header button:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
-  main { max-width: 640px; margin: 0 auto; padding: 48px 24px; }
+  #app-view main {
+    max-width: 720px;
+    margin: 0;
+    margin-left: clamp(24px, 8vw, 140px);
+    padding: 48px 24px 48px 0;
+  }
+  @media (max-width: 900px) {
+    #app-view main { margin-left: auto; margin-right: auto; padding: 32px 20px; }
+  }
 
   /* Login */
   #login-view {
