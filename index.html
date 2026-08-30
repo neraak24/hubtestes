@@ -85,42 +85,77 @@
   /* Login */
   #login-view {
     min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+      repeating-conic-gradient(var(--bg) 0% 25%, var(--accent-soft) 0% 50%) 0 0/26px 26px;
+  }
+  .login-stage {
+    min-height: 100vh;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: grid;
+    grid-template-columns: minmax(220px, 360px) minmax(300px, 460px);
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+  }
+  .deco-window {
+    background: var(--panel);
+    border: 2px solid var(--accent-dark);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 rgba(92, 118, 84, 0.35);
+  }
+  .deco-titlebar {
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fdfaf2;
+    font-family: var(--title-font);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .deco-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: repeating-conic-gradient(#e2ddc9 0% 25%, #ece7d4 0% 50%) 0 0/20px 20px;
+    padding: 10px;
+    gap: 8px;
+  }
+  .deco-cell {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    padding: 10px;
   }
-  .cloud-layer {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
+  .deco-footer {
+    padding: 10px 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
   }
-  .cloud {
-    position: absolute;
-    font-size: 34px;
-    opacity: 0.5;
-    filter: saturate(0.8);
+  .deco-caption {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family: var(--title-font);
+    letter-spacing: 0.5px;
   }
-  .cloud-a { top: 10%; font-size: 30px; }
-  .cloud-b { top: 32%; font-size: 22px; opacity: 0.4; }
-  .cloud-c { top: 58%; font-size: 38px; opacity: 0.55; }
-  .cloud-d { top: 78%; font-size: 24px; opacity: 0.4; }
-
-  @keyframes drift {
-    from { transform: translateX(-80px) rotate(-6deg); }
-    to { transform: translateX(calc(100vw + 80px)) rotate(6deg); }
+  .palette-swatch { display: flex; gap: 3px; }
+  .palette-swatch span {
+    width: 12px; height: 12px; border-radius: 2px;
+    border: 1px solid rgba(74,67,53,0.25);
   }
-  .cloud-a { animation: drift 62s linear infinite; }
-  .cloud-b { animation: drift 84s linear infinite; animation-delay: -20s; }
-  .cloud-c { animation: drift 70s linear infinite; animation-delay: -45s; }
-  .cloud-d { animation: drift 95s linear infinite; animation-delay: -10s; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cloud { animation: none !important; }
+  @media (max-width: 860px) {
+    .login-stage { grid-template-columns: 1fr; }
+    .deco-window { display: none; }
   }
 
   #login-view main { position: relative; z-index: 1; }
@@ -128,9 +163,9 @@
     background: var(--panel);
     border: 2px solid var(--accent-dark);
     border-radius: 10px;
-    padding: 0 0 32px;
+    padding: 0 0 40px;
     width: 100%;
-    max-width: 340px;
+    max-width: 460px;
     overflow: hidden;
     box-shadow: 4px 4px 0 rgba(92, 118, 84, 0.35);
   }
@@ -152,31 +187,31 @@
     display: inline-block;
     border: 1px solid rgba(92,118,84,0.5);
   }
-  .login-card-body { padding: 26px 30px 0; }
+  .login-card-body { padding: 30px 38px 0; }
   .login-card h1 {
     font-family: var(--title-font);
-    font-size: 15px;
-    margin: 0 0 8px;
+    font-size: 16px;
+    margin: 0 0 10px;
     color: var(--accent-dark);
   }
   .login-card p {
     font-size: 13px;
     color: var(--ink-soft);
-    margin: 0 0 24px;
+    margin: 0 0 28px;
   }
   label {
     display: block;
     font-size: 12px;
     color: var(--ink-soft);
-    margin: 14px 0 6px;
+    margin: 18px 0 7px;
     font-weight: 600;
   }
   input, select {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border: 2px solid var(--line);
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
     font-family: var(--body-font);
     background: #fff;
     color: var(--ink);
@@ -187,14 +222,14 @@
     border-color: var(--accent);
   }
   button.primary {
-    margin-top: 22px;
+    margin-top: 26px;
     width: 100%;
     background: var(--accent);
     color: #fdfaf2;
     border: 2px solid var(--accent-dark);
     border-radius: 6px;
-    padding: 11px;
-    font-size: 14px;
+    padding: 13px;
+    font-size: 15px;
     font-family: var(--body-font);
     font-weight: 700;
     cursor: pointer;
@@ -515,12 +550,31 @@
 <body>
 
 <div id="login-view">
-  <div class="cloud-layer">
-    <div class="cloud cloud-a"><svg width="30" height="30" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-    <div class="cloud cloud-b"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-    <div class="cloud cloud-c"><svg width="38" height="38" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
-    <div class="cloud cloud-d"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-  </div>
+  <div class="login-stage">
+    <div class="deco-window">
+      <div class="deco-titlebar">
+        <span>ferramentas.pix</span>
+        <span class="win-dots"><span></span><span></span><span></span></span>
+      </div>
+      <div class="deco-grid">
+        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
+      </div>
+      <div class="deco-footer">
+        <span class="deco-caption">hub de testes</span>
+        <div class="palette-swatch">
+          <span style="background:#7c9473;"></span>
+          <span style="background:#5c7654;"></span>
+          <span style="background:#e4ead9;"></span>
+          <span style="background:#e3aeb0;"></span>
+          <span style="background:#fdfaf2;"></span>
+        </div>
+      </div>
+    </div>
   <main style="padding:0;">
     <div class="login-card">
       <h1>Hub</h1>
@@ -555,6 +609,7 @@
       </div>
     </div>
   </main>
+  </div>
 </div>
 
 <div id="app-view" style="display:none;">
