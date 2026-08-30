@@ -29,9 +29,19 @@
   body {
     margin: 0;
     font-family: var(--body-font);
-    background: var(--bg);
+    background:
+      radial-gradient(rgba(92,118,84,0.10) 1px, transparent 1px),
+      var(--bg);
+    background-size: 14px 14px;
     color: var(--ink);
     min-height: 100vh;
+  }
+  .win-dots { display: flex; gap: 5px; }
+  .win-dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: rgba(253,250,242,0.85);
+    display: inline-block;
+    border: 1px solid rgba(92,118,84,0.5);
   }
   header {
     padding: 14px 28px;
@@ -47,7 +57,15 @@
     letter-spacing: 0.05em;
     color: #fdfaf2;
   }
-  header .brand::before { content: "🌱 "; }
+  header .brand::before {
+  content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='1' y='6' width='1' height='1'/><rect x='2' y='6' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='5' y='6' width='1' height='1'/><rect x='6' y='6' width='1' height='1'/><rect x='0' y='7' width='1' height='1'/><rect x='1' y='7' width='1' height='1'/><rect x='2' y='7' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/><rect x='5' y='7' width='1' height='1'/><rect x='6' y='7' width='1' height='1'/><rect x='7' y='7' width='1' height='1'/></svg>");
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: -1px;
+  margin-right: 6px;
+  image-rendering: pixelated;
+}
   header button {
     background: var(--panel);
     border: 2px solid var(--accent-dark);
@@ -203,8 +221,30 @@
     color: #fdfaf2;
     border-radius: 8px 8px 0 0;
   }
-  h2::before { content: "🌿 "; }
+  h2::before {
+  content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='2' y='0' width='1' height='1'/><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='1' y='1' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='0' y='2' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='0' y='3' width='1' height='1'/><rect x='1' y='3' width='1' height='1'/><rect x='2' y='3' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='5' y='3' width='1' height='1'/><rect x='6' y='3' width='1' height='1'/><rect x='1' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='5' y='4' width='1' height='1'/><rect x='2' y='5' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/></svg>");
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  vertical-align: -1px;
+  margin-right: 6px;
+  image-rendering: pixelated;
+}
   .section-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 20px; padding: 0 2px; }
+  .search-box {
+    position: relative;
+    margin: 2px 0 14px;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .search-box input {
+    padding-left: 32px;
+  }
 
   .card {
     background: var(--panel);
@@ -239,9 +279,13 @@
     margin-right: 8px;
   }
   .card > h2::before {
-    content: "🌿";
-    font-size: 13px;
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='2' y='0' width='1' height='1'/><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='1' y='1' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='0' y='2' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='0' y='3' width='1' height='1'/><rect x='1' y='3' width='1' height='1'/><rect x='2' y='3' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='5' y='3' width='1' height='1'/><rect x='6' y='3' width='1' height='1'/><rect x='1' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='5' y='4' width='1' height='1'/><rect x='2' y='5' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/></svg>");
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    vertical-align: -1px;
     margin-right: 8px;
+    image-rendering: pixelated;
   }
 
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
@@ -269,6 +313,22 @@
     cursor: pointer;
   }
   .link-btn:hover { background: var(--accent-soft); }
+  .danger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    background: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: var(--body-font);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .danger-btn:hover { background: rgba(181,101,79,0.1); }
+  .sessao-item .danger-btn { padding: 4px 8px; font-size: 11px; }
   .link-row {
     display: none;
     margin-top: 10px;
@@ -456,10 +516,10 @@
 
 <div id="login-view">
   <div class="cloud-layer">
-    <div class="cloud cloud-a">🌿</div>
-    <div class="cloud cloud-b">🍃</div>
-    <div class="cloud cloud-c">🪴</div>
-    <div class="cloud cloud-d">🌱</div>
+    <div class="cloud cloud-a"><svg width="30" height="30" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
+    <div class="cloud cloud-b"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
+    <div class="cloud cloud-c"><svg width="38" height="38" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
+    <div class="cloud cloud-d"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
   </div>
   <main style="padding:0;">
     <div class="login-card">
@@ -500,7 +560,10 @@
 <div id="app-view" style="display:none;">
   <header>
     <span class="brand">Hub</span>
-    <button id="logout-btn">Sair</button>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span class="win-dots"><span></span><span></span><span></span></span>
+      <button id="logout-btn">Sair</button>
+    </div>
   </header>
   <main>
     <div class="card">
@@ -537,6 +600,10 @@
 
     <div class="card" id="lista-perfis-card">
       <h2>Perfis cadastrados</h2>
+      <div class="search-box">
+        <svg width="13" height="13" viewBox="0 0 8 8" fill="#8a8270" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="3" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>
+        <input id="busca-perfil" type="text" placeholder="Buscar paciente pelo nome...">
+      </div>
       <p class="section-sub" id="count-sub">&nbsp;</p>
       <ul class="profile-list" id="profile-list"></ul>
       <div class="empty" id="empty-msg" style="display:none;">Nenhum perfil cadastrado ainda.</div>
@@ -548,7 +615,13 @@
 
     <div class="card">
       <h2 id="detalhe-nome">&nbsp;</h2>
-      <p class="section-sub" id="detalhe-meta">&nbsp;</p>
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <p class="section-sub" id="detalhe-meta" style="margin:0;">&nbsp;</p>
+        <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil">
+          <svg width="13" height="13" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
+          Excluir perfil
+        </button>
+      </div>
     </div>
 
     <div class="card">
@@ -790,21 +863,41 @@
     loadProfiles();
   });
 
+  let ultimosPerfis = [];
+
   async function loadProfiles() {
     const { data, error } = await sb
       .from('perfis')
       .select('*')
       .order('criado_em', { ascending: false });
 
-    profileList.innerHTML = '';
-
     if (error) {
       countSub.textContent = 'Erro ao carregar perfis.';
       return;
     }
 
-    countSub.textContent = data.length === 1 ? '1 perfil' : data.length + ' perfis';
+    ultimosPerfis = data;
+    const buscaInput = document.getElementById('busca-perfil');
+    renderProfileList(filtrarPerfis(data, buscaInput ? buscaInput.value : ''));
+  }
+
+  function filtrarPerfis(lista, termo) {
+    const t = (termo || '').trim().toLowerCase();
+    if (!t) return lista;
+    return lista.filter(p => p.nome.toLowerCase().includes(t));
+  }
+
+  function renderProfileList(data) {
+    profileList.innerHTML = '';
+
+    const total = ultimosPerfis.length;
+    countSub.textContent = data.length === total
+      ? (total === 1 ? '1 perfil' : total + ' perfis')
+      : data.length + ' de ' + total + ' perfis';
     emptyMsg.style.display = data.length === 0 ? 'block' : 'none';
+    emptyMsg.textContent = total === 0
+      ? 'Nenhum perfil cadastrado ainda.'
+      : 'Nenhum perfil encontrado para essa busca.';
 
     data.forEach(p => {
       const li = document.createElement('li');
@@ -826,6 +919,10 @@
       profileList.appendChild(li);
     });
   }
+
+  document.getElementById('busca-perfil').addEventListener('input', (e) => {
+    renderProfileList(filtrarPerfis(ultimosPerfis, e.target.value));
+  });
 
   let perfilAtual = null;
 
@@ -858,6 +955,35 @@
   }
 
   document.getElementById('voltar-lista-btn').addEventListener('click', voltarLista);
+
+  document.getElementById('excluir-perfil-btn').addEventListener('click', excluirPerfilAtual);
+
+  async function excluirPerfilAtual() {
+    if (!perfilAtual) return;
+    const ok = confirm(`Excluir o perfil de "${perfilAtual.nome}"? Isso também remove as sessões (links e resultados) desse perfil. Essa ação não pode ser desfeita.`);
+    if (!ok) return;
+
+    const btn = document.getElementById('excluir-perfil-btn');
+    btn.disabled = true;
+    const perfilId = perfilAtual.id;
+
+    const { error: erroSessoes } = await sb.from('sessoes').delete().eq('perfil_id', perfilId);
+    if (erroSessoes) {
+      alert('Não foi possível remover as sessões desse perfil: ' + erroSessoes.message);
+      btn.disabled = false;
+      return;
+    }
+
+    const { error: erroPerfil } = await sb.from('perfis').delete().eq('id', perfilId);
+    btn.disabled = false;
+    if (erroPerfil) {
+      alert('Não foi possível excluir o perfil: ' + erroPerfil.message);
+      return;
+    }
+
+    voltarLista();
+    loadProfiles();
+  }
 
   document.getElementById('detalhe-site-cubos').addEventListener('click', () => gerarLinkDetalhe('cubos'));
   document.getElementById('detalhe-site-adf').addEventListener('click', () => gerarLinkDetalhe('adf'));
@@ -942,7 +1068,12 @@
             <span class="status-tag ${statusClasse}">${statusTexto}</span>
             <div class="expira-info">${formatDateTime(s.criado_em)}</div>
           </div>
-          <button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>
+            <button class="danger-btn excluir-sessao-btn" data-sessao="${s.id}" data-perfil="${perfilId}" title="Excluir teste">
+              <svg width="11" height="11" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
+            </button>
+          </div>
         `;
         container.appendChild(div);
       });
@@ -950,9 +1081,24 @@
       container.querySelectorAll('.ver-prints-btn').forEach(btn => {
         btn.addEventListener('click', () => abrirGaleria(btn.dataset.sessao, btn.dataset.site));
       });
+      container.querySelectorAll('.excluir-sessao-btn').forEach(btn => {
+        btn.addEventListener('click', () => excluirSessao(btn.dataset.sessao, btn.dataset.perfil));
+      });
     } catch (e) {
       container.innerHTML = '<div class="empty">Erro ao carregar sessões.</div>';
     }
+  }
+
+  async function excluirSessao(sessaoId, perfilId) {
+    const ok = confirm('Excluir este teste? O link e os resultados salvos dessa sessão serão perdidos. Essa ação não pode ser desfeita.');
+    if (!ok) return;
+
+    const { error } = await sb.from('sessoes').delete().eq('id', sessaoId);
+    if (error) {
+      alert('Não foi possível excluir esse teste: ' + error.message);
+      return;
+    }
+    carregarSessoesDetalhe(perfilId);
   }
 
   function abrirAmpliado(dados) {
