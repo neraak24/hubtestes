@@ -108,6 +108,51 @@
     #app-view main { padding: 32px 20px; }
     .app-body { padding: 0; }
   }
+  .side-deco { flex: 0 0 240px; }
+
+  .resumo-stats { display: flex; flex-direction: column; gap: 14px; }
+  .resumo-stat { display: flex; flex-direction: column; }
+  .resumo-num {
+    font-family: var(--title-font);
+    font-size: 26px;
+    color: var(--accent-dark);
+    line-height: 1;
+  }
+  .resumo-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+  .resumo-sites {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .resumo-sites-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .resumo-sites-list { display: flex; flex-direction: column; gap: 6px; }
+  .resumo-sites-list span {
+    font-size: 13px;
+    color: var(--ink);
+    padding: 6px 10px;
+    background: var(--accent-soft);
+    border-radius: 6px;
+  }
+
+  #home-view .side-deco > .card { margin-bottom: 20px; }
+
+  .detail-side {
+    flex: 0 0 340px;
+    position: sticky;
+    top: 110px;
+  }
+  #detail-view { flex-wrap: wrap; align-items: flex-start; }
+  @media (max-width: 1080px) {
+    .detail-side { position: static; flex: 1 1 100%; order: -1; }
+    #detail-view main { flex: 1 1 100%; }
+  }
 
   /* Login */
   #login-view {
@@ -193,6 +238,18 @@
     position: relative;
     z-index: 1;
   }
+  .deco-window-mini {
+    width: 50%;
+    margin: -30px auto 0 0;
+    transform: rotate(-7deg);
+    position: relative;
+    z-index: 2;
+  }
+  .deco-window-mini .deco-grid { grid-template-columns: repeat(2, 1fr); padding: 8px; gap: 6px; }
+  .deco-window-mini .deco-cell { padding: 6px; }
+  @media (max-width: 860px) {
+    .deco-window-mini { display: none; }
+  }
   .deco-swatch-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -210,7 +267,7 @@
     background: var(--panel);
     border: 2px solid var(--accent-dark);
     border-radius: 10px;
-    padding: 0 0 40px;
+    padding: 0;
     width: 100%;
     max-width: 540px;
     overflow: hidden;
@@ -234,7 +291,10 @@
     display: inline-block;
     border: 1px solid rgba(92,118,84,0.5);
   }
-  .login-card-body { padding: 42px 72px 10px; }
+  .login-card-body { padding: 30px 48px 14px; }
+  @media (max-width: 480px) {
+    .login-card-body { padding: 26px 26px 10px; }
+  }
   .login-card h1 {
     font-family: var(--title-font);
     font-size: 16px;
@@ -641,38 +701,54 @@
         <span style="background:#eef0e3;"></span>
       </div>
     </div>
+    <div class="deco-window deco-window-mini">
+      <div class="deco-titlebar">
+        <span>flora.pix</span>
+        <span class="win-dots"><span></span><span></span><span></span></span>
+      </div>
+      <div class="deco-grid">
+        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#7c9473" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(8deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
+        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(-6deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
+      </div>
+    </div>
     </div>
   <main style="padding:0;">
     <div class="login-card">
-      <h1>Hub</h1>
-      <p>Entre com sua conta para gerenciar perfis.</p>
-      <form id="login-form">
-        <label for="login-usuario">Usuário</label>
-        <input id="login-usuario" type="text" required autocomplete="username">
-        <label for="senha">Senha</label>
-        <input id="senha" type="password" required autocomplete="current-password">
-        <button class="primary" type="submit" id="login-btn">Entrar</button>
-      </form>
-      <div class="error" id="login-error" style="display:none;"></div>
-      <p style="text-align:center; margin-top:18px; font-size:13px;">
-        <a href="#" id="show-request-link" style="color:var(--accent);">Solicitar acesso</a>
-      </p>
-
-      <form id="request-form" style="display:none;">
-        <label for="req-nome">Nome</label>
-        <input id="req-nome" type="text" required>
-        <label for="req-usuario">Usuário</label>
-        <input id="req-usuario" type="text" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9._-]+" title="Letras, números, ponto, traço ou underline">
-        <label for="req-senha">Senha</label>
-        <input id="req-senha" type="password" required minlength="6">
-        <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
-        <p style="text-align:center; margin-top:12px; font-size:13px;">
-          <a href="#" id="show-login-link" style="color:var(--accent);">Voltar para o login</a>
+      <div class="login-card-titlebar">
+        <span>hub.login</span>
+        <span class="dots"><span></span><span></span><span></span></span>
+      </div>
+      <div class="login-card-body">
+        <h1>Hub</h1>
+        <p>Entre com sua conta para gerenciar perfis.</p>
+        <form id="login-form">
+          <label for="login-usuario">Usuário</label>
+          <input id="login-usuario" type="text" required autocomplete="username">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" required autocomplete="current-password">
+          <button class="primary" type="submit" id="login-btn">Entrar</button>
+        </form>
+        <div class="error" id="login-error" style="display:none;"></div>
+        <p style="text-align:center; margin-top:18px; font-size:13px;">
+          <a href="#" id="show-request-link" style="color:var(--accent);">Solicitar acesso</a>
         </p>
-      </form>
-      <div class="error" id="request-error" style="display:none;"></div>
-      <div id="request-success" style="display:none; margin-top:14px; font-size:13px; color:var(--accent);">
-        Pedido enviado! Assim que for aprovado, você já pode entrar com esse usuário e senha.
+
+        <form id="request-form" style="display:none;">
+          <label for="req-nome">Nome</label>
+          <input id="req-nome" type="text" required>
+          <label for="req-usuario">Usuário</label>
+          <input id="req-usuario" type="text" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9._-]+" title="Letras, números, ponto, traço ou underline">
+          <label for="req-senha">Senha</label>
+          <input id="req-senha" type="password" required minlength="6">
+          <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
+          <p style="text-align:center; margin-top:12px; font-size:13px;">
+            <a href="#" id="show-login-link" style="color:var(--accent);">Voltar para o login</a>
+          </p>
+        </form>
+        <div class="error" id="request-error" style="display:none;"></div>
+        <div id="request-success" style="display:none; margin-top:14px; font-size:13px; color:var(--accent);">
+          Pedido enviado! Assim que for aprovado, você já pode entrar com esse usuário e senha.
+        </div>
       </div>
     </div>
   </main>
@@ -687,7 +763,7 @@
       <button id="logout-btn">Sair</button>
     </div>
   </header>
-  <div class="app-body">
+  <div class="app-body" id="home-view">
   <main>
     <div class="card">
       <h2>Novo perfil</h2>
@@ -733,38 +809,28 @@
     </div>
   </main>
 
-  <main id="perfil-detail-view" style="display:none;">
-    <button id="voltar-lista-btn" class="link-btn" style="margin-bottom:16px;">← Voltar aos perfis</button>
-
-    <div class="card">
-      <h2 id="detalhe-nome">&nbsp;</h2>
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <p class="section-sub" id="detalhe-meta" style="margin:0;">&nbsp;</p>
-        <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil">
-          <svg width="13" height="13" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
-          Excluir perfil
-        </button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Gerar link</h2>
-      <p class="section-sub">Escolha o site para criar um link individual e temporário.</p>
-      <div class="site-choices">
-        <button id="detalhe-site-cubos">Cubos</button>
-        <button id="detalhe-site-adf">Arranjo de Figuras</button>
-        <button id="detalhe-site-ao">Armar Objetos</button>
-      </div>
-      <div class="generated-link" id="detalhe-generated-link"></div>
-    </div>
-
-    <div class="card">
-      <h2>Sessões</h2>
-      <p class="section-sub">Links já gerados para este perfil e seus resultados.</p>
-      <div class="sessoes-list open" id="detalhe-sessoes-list"></div>
-    </div>
-  </main>
   <div class="side-deco">
+    <div class="card" id="resumo-card">
+      <h2>Resumo</h2>
+      <div class="resumo-stats">
+        <div class="resumo-stat">
+          <span class="resumo-num" id="resumo-total">0</span>
+          <span class="resumo-label">perfis cadastrados</span>
+        </div>
+        <div class="resumo-stat" id="resumo-pendentes-row" style="display:none;">
+          <span class="resumo-num" id="resumo-pendentes">0</span>
+          <span class="resumo-label">pedidos pendentes</span>
+        </div>
+      </div>
+      <div class="resumo-sites">
+        <span class="resumo-sites-label">Sites disponíveis</span>
+        <div class="resumo-sites-list">
+          <span>Cubos</span>
+          <span>Arranjo de Figuras</span>
+          <span>Armar Objetos</span>
+        </div>
+      </div>
+    </div>
     <div class="deco-window">
       <div class="deco-titlebar">
         <span>hub.ini</span>
@@ -785,6 +851,40 @@
           <span style="background:#fdfaf2;"></span>
         </div>
       </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="app-body" id="detail-view" style="display:none;">
+  <main>
+    <button id="voltar-lista-btn" class="link-btn" style="margin-bottom:16px;">← Voltar aos perfis</button>
+
+    <div class="card">
+      <h2>Sessões</h2>
+      <p class="section-sub">Links já gerados para este perfil e seus resultados.</p>
+      <div class="sessoes-list open" id="detalhe-sessoes-list"></div>
+    </div>
+  </main>
+
+  <div class="detail-side">
+    <div class="card">
+      <h2 id="detalhe-nome">&nbsp;</h2>
+      <p class="section-sub" id="detalhe-meta" style="margin:0 0 16px;">&nbsp;</p>
+      <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil" style="width:100%; justify-content:center;">
+        <svg width="13" height="13" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
+        Excluir perfil
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Gerar link</h2>
+      <p class="section-sub">Escolha o site para criar um link individual e temporário.</p>
+      <div class="site-choices">
+        <button id="detalhe-site-cubos">Cubos</button>
+        <button id="detalhe-site-adf">Arranjo de Figuras</button>
+        <button id="detalhe-site-ao">Armar Objetos</button>
+      </div>
+      <div class="generated-link" id="detalhe-generated-link"></div>
     </div>
   </div>
   </div>
@@ -909,6 +1009,12 @@
       const pendentes = json.pendentes || [];
 
       pendingCard.style.display = pendentes.length > 0 ? 'block' : 'none';
+      const resumoPendRow = document.getElementById('resumo-pendentes-row');
+      const resumoPendNum = document.getElementById('resumo-pendentes');
+      if (resumoPendRow && resumoPendNum) {
+        resumoPendNum.textContent = pendentes.length;
+        resumoPendRow.style.display = pendentes.length > 0 ? 'flex' : 'none';
+      }
       pendingList.innerHTML = '';
 
       pendentes.forEach(p => {
@@ -1046,6 +1152,9 @@
       ? 'Nenhum perfil cadastrado ainda.'
       : 'Nenhum perfil encontrado para essa busca.';
 
+    const resumoTotalEl = document.getElementById('resumo-total');
+    if (resumoTotalEl) resumoTotalEl.textContent = total;
+
     data.forEach(p => {
       const li = document.createElement('li');
       const meta = [];
@@ -1075,10 +1184,8 @@
 
   function abrirPerfil(p) {
     perfilAtual = p;
-    document.getElementById('lista-perfis-card').style.display = 'none';
-    document.getElementById('pending-card').style.display = 'none';
-    document.querySelector('#app-view form#profile-form').closest('.card').style.display = 'none';
-    document.getElementById('perfil-detail-view').style.display = 'block';
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('detail-view').style.display = 'flex';
 
     const meta = [];
     if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
@@ -1094,9 +1201,8 @@
 
   function voltarLista() {
     perfilAtual = null;
-    document.getElementById('perfil-detail-view').style.display = 'none';
-    document.getElementById('lista-perfis-card').style.display = 'block';
-    document.querySelector('#app-view form#profile-form').closest('.card').style.display = 'block';
+    document.getElementById('detail-view').style.display = 'none';
+    document.getElementById('home-view').style.display = 'flex';
     location.hash = '';
     loadPending();
   }
