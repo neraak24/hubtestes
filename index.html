@@ -117,6 +117,9 @@
     font-size: 26px;
     color: var(--accent-dark);
     line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
   .resumo-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
   .resumo-sites {
@@ -134,11 +137,24 @@
   }
   .resumo-sites-list { display: flex; flex-direction: column; gap: 6px; }
   .resumo-sites-list span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 13px;
     color: var(--ink);
     padding: 6px 10px;
     background: var(--accent-soft);
     border-radius: 6px;
+  }
+  .empty {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 30px 10px 10px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-soft);
   }
 
   #home-view .side-deco > .card { margin-bottom: 20px; }
@@ -191,6 +207,16 @@
     align-items: center;
     justify-content: space-between;
   }
+  .deco-menubar {
+    display: flex;
+    gap: 12px;
+    padding: 5px 10px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .deco-icon { display: inline-flex; vertical-align: -2px; image-rendering: pixelated; }
   .deco-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -664,6 +690,9 @@
         <span>ferramentas.pix</span>
         <span class="win-dots"><span></span><span></span><span></span></span>
       </div>
+      <div class="deco-menubar">
+        <span>Arquivo</span><span>Editar</span><span>Ver</span>
+      </div>
       <div class="deco-grid">
         <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
         <div class="deco-cell"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
@@ -805,7 +834,10 @@
       </div>
       <p class="section-sub" id="count-sub">&nbsp;</p>
       <ul class="profile-list" id="profile-list"></ul>
-      <div class="empty" id="empty-msg" style="display:none;">Nenhum perfil cadastrado ainda.</div>
+      <div class="empty" id="empty-msg" style="display:none;">
+        <svg width="34" height="34" viewBox="0 0 8 8" fill="#cdbfa0" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="1" y="2" width="2" height="1"/><rect x="0" y="3" width="8" height="1"/><rect x="0" y="4" width="8" height="3"/><rect x="1" y="4" width="1" height="1" fill="#fdfaf2"/><rect x="1" y="3" width="1" height="4" fill="#fdfaf2"/></svg>
+        <span id="empty-msg-text">Nenhum perfil cadastrado ainda.</span>
+      </div>
     </div>
   </main>
 
@@ -814,20 +846,20 @@
       <h2>Resumo</h2>
       <div class="resumo-stats">
         <div class="resumo-stat">
-          <span class="resumo-num" id="resumo-total">0</span>
+          <span class="resumo-num"><svg class="deco-icon" width="14" height="14" viewBox="0 0 8 8" fill="#e3aeb0" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="0" width="1" height="1"/><rect x="2" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="0" y="1" width="4" height="1"/><rect x="4" y="1" width="4" height="1"/><rect x="0" y="2" width="8" height="1"/><rect x="0" y="3" width="8" height="1"/><rect x="1" y="4" width="6" height="1"/><rect x="2" y="5" width="4" height="1"/><rect x="3" y="6" width="2" height="1"/></svg><span id="resumo-total">0</span></span>
           <span class="resumo-label">perfis cadastrados</span>
         </div>
         <div class="resumo-stat" id="resumo-pendentes-row" style="display:none;">
-          <span class="resumo-num" id="resumo-pendentes">0</span>
+          <span class="resumo-num"><span id="resumo-pendentes">0</span></span>
           <span class="resumo-label">pedidos pendentes</span>
         </div>
       </div>
       <div class="resumo-sites">
         <span class="resumo-sites-label">Sites disponíveis</span>
         <div class="resumo-sites-list">
-          <span>Cubos</span>
-          <span>Arranjo de Figuras</span>
-          <span>Armar Objetos</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Cubos</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Armar Objetos</span>
         </div>
       </div>
     </div>
@@ -835,6 +867,9 @@
       <div class="deco-titlebar">
         <span>hub.ini</span>
         <span class="win-dots"><span></span><span></span><span></span></span>
+      </div>
+      <div class="deco-menubar">
+        <span>Perfis</span><span>Sessões</span><span>Ajuda</span>
       </div>
       <div class="deco-grid">
         <div class="deco-cell"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
@@ -1147,8 +1182,8 @@
     countSub.textContent = data.length === total
       ? (total === 1 ? '1 perfil' : total + ' perfis')
       : data.length + ' de ' + total + ' perfis';
-    emptyMsg.style.display = data.length === 0 ? 'block' : 'none';
-    emptyMsg.textContent = total === 0
+    emptyMsg.style.display = data.length === 0 ? 'flex' : 'none';
+    document.getElementById('empty-msg-text').textContent = total === 0
       ? 'Nenhum perfil cadastrado ainda.'
       : 'Nenhum perfil encontrado para essa busca.';
 
