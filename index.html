@@ -555,12 +555,42 @@
   }
   .status-tag {
     font-size: 11px;
-    padding: 2px 8px;
+    padding: 2px 8px 2px 6px;
     border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
+  .status-tag svg { image-rendering: pixelated; flex-shrink: 0; }
   .status-concluido { background: #e3eff8; color: var(--accent); }
   .status-pendente { background: #fdf3e3; color: #9a6a1f; }
   .status-expirado { background: #f3e5e3; color: var(--danger); }
+
+  .name-tiles { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+  .name-tile {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 2px;
+    background: var(--accent);
+    border: 2px solid var(--accent-dark);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--title-font);
+    font-size: 10px;
+    color: #fdfaf2;
+    text-transform: lowercase;
+    box-shadow: 0 3px 0 var(--accent-dark);
+  }
+  .cadastrado-por {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0 0;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
   .ver-prints-btn {
     border: none;
     background: none;
@@ -904,8 +934,12 @@
   <div class="detail-side">
     <div class="card">
       <h2 id="detalhe-nome">&nbsp;</h2>
-      <p class="section-sub" id="detalhe-meta" style="margin:0 0 16px;">&nbsp;</p>
-      <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil" style="width:100%; justify-content:center;">
+      <p class="section-sub" id="detalhe-meta" style="margin:0 0 8px;">&nbsp;</p>
+      <div class="cadastrado-por" id="detalhe-cadastrado-por" style="display:none;">
+        <span>cadastrado por</span>
+        <div class="name-tiles" id="detalhe-nome-tiles"></div>
+      </div>
+      <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil" style="width:100%; justify-content:center; margin-top:16px;">
         <svg width="13" height="13" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
         Excluir perfil
       </button>
@@ -965,9 +999,25 @@
 
   const EDGE_BASE = SUPABASE_URL + '/functions/v1';
 
+  let usuariosMap = {};
+
+  async function loadUsuarios() {
+    const { data, error } = await sb.from('usuarios').select('id, usuario, nome');
+    if (error || !data) return;
+    usuariosMap = {};
+    data.forEach(u => { usuariosMap[u.id] = u; });
+  }
+
+  function nomeParaTiles(texto) {
+    const base = (texto || '?').trim().split(/\s+/)[0].replace(/[^a-zA-Z0-9]/g, '');
+    const letras = (base || '?').slice(0, 10).split('');
+    return letras.map(l => `<span class="name-tile">${escapeHtml(l)}</span>`).join('');
+  }
+
   function showApp() {
     loginView.style.display = 'none';
     appView.style.display = 'block';
+    loadUsuarios();
     loadProfiles();
     loadPending();
   }
@@ -1230,6 +1280,15 @@
     document.getElementById('detalhe-generated-link').classList.remove('show');
     document.getElementById('detalhe-generated-link').innerHTML = '';
 
+    const dono = usuariosMap[p.criado_por];
+    const cadastradoPorEl = document.getElementById('detalhe-cadastrado-por');
+    if (dono) {
+      document.getElementById('detalhe-nome-tiles').innerHTML = nomeParaTiles(dono.nome || dono.usuario);
+      cadastradoPorEl.style.display = 'flex';
+    } else {
+      cadastradoPorEl.style.display = 'none';
+    }
+
     carregarSessoesDetalhe(p.id);
     location.hash = 'perfil-' + p.id;
   }
@@ -1348,12 +1407,17 @@
         const expirado = !s.concluido && new Date(s.expira_em).getTime() < Date.now();
         const statusClasse = s.concluido ? 'status-concluido' : (expirado ? 'status-expirado' : 'status-pendente');
         const statusTexto = s.concluido ? 'Concluído' : (expirado ? 'Expirado' : 'Em aberto');
+        const statusIcone = s.concluido
+          ? '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3" width="1" height="1" fill="currentColor"/><rect x="1" y="4" width="1" height="1" fill="currentColor"/><rect x="2" y="5" width="1" height="1" fill="currentColor"/><rect x="3" y="4" width="1" height="1" fill="currentColor"/><rect x="4" y="3" width="1" height="1" fill="currentColor"/><rect x="5" y="2" width="1" height="1" fill="currentColor"/><rect x="6" y="1" width="1" height="1" fill="currentColor"/><rect x="7" y="0" width="1" height="1" fill="currentColor"/></svg>'
+          : expirado
+          ? '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="1" height="1" fill="currentColor"/><rect x="1" y="1" width="1" height="1" fill="currentColor"/><rect x="2" y="2" width="1" height="1" fill="currentColor"/><rect x="3" y="3" width="1" height="1" fill="currentColor"/><rect x="4" y="4" width="1" height="1" fill="currentColor"/><rect x="5" y="5" width="1" height="1" fill="currentColor"/><rect x="6" y="6" width="1" height="1" fill="currentColor"/><rect x="7" y="7" width="1" height="1" fill="currentColor"/><rect x="7" y="0" width="1" height="1" fill="currentColor"/><rect x="6" y="1" width="1" height="1" fill="currentColor"/><rect x="5" y="2" width="1" height="1" fill="currentColor"/><rect x="4" y="3" width="1" height="1" fill="currentColor"/><rect x="3" y="4" width="1" height="1" fill="currentColor"/><rect x="2" y="5" width="1" height="1" fill="currentColor"/><rect x="1" y="6" width="1" height="1" fill="currentColor"/><rect x="0" y="7" width="1" height="1" fill="currentColor"/></svg>'
+          : '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="0" width="6" height="1" fill="currentColor"/><rect x="2" y="1" width="4" height="1" fill="currentColor"/><rect x="3" y="2" width="2" height="1" fill="currentColor"/><rect x="3" y="3" width="2" height="1" fill="currentColor"/><rect x="2" y="4" width="4" height="1" fill="currentColor"/><rect x="1" y="5" width="6" height="1" fill="currentColor"/></svg>';
         const div = document.createElement('div');
         div.className = 'sessao-item';
         div.innerHTML = `
           <div>
             <strong>${capitalize(s.site)}</strong>
-            <span class="status-tag ${statusClasse}">${statusTexto}</span>
+            <span class="status-tag ${statusClasse}">${statusIcone}${statusTexto}</span>
             <div class="expira-info">${formatDateTime(s.criado_em)}</div>
           </div>
           <div style="display:flex; align-items:center; gap:6px;">
