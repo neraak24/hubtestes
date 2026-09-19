@@ -2,1710 +2,649 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hub · Perfis</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Span Visuoespacial</title>
 <style>
-  :root {
-    --bg: #eef0e3;
-    --panel: #fdfaf2;
-    --ink: #4a4335;
-    --ink-soft: #8a8270;
-    --line: #cdbfa0;
-    --accent: #7c9473;
-    --accent-dark: #5c7654;
-    --accent-soft: #e4ead9;
-    --pink: #e3aeb0;
-    --danger: #b5654f;
-    --radius: 10px;
-    --sky-top: #cbe0d4;
-    --sky-bottom: #f4ecd8;
-    --title-font: 'Silkscreen', monospace;
-    --body-font: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: var(--body-font);
-    background:
-      radial-gradient(rgba(92,118,84,0.10) 1px, transparent 1px),
-      var(--bg);
-    background-size: 14px 14px;
-    color: var(--ink);
-    min-height: 100vh;
-  }
-  .win-dots { display: flex; gap: 5px; }
-  .win-dots span {
-    width: 9px; height: 9px; border-radius: 50%;
-    background: rgba(253,250,242,0.85);
-    display: inline-block;
-    border: 1px solid rgba(92,118,84,0.5);
-  }
-  header {
-    padding: 14px 28px;
-    border-bottom: 2px solid var(--accent-dark);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  }
-  .header-welcome {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: #fdfaf2;
-  }
-  .name-tile-light {
-    min-width: 18px;
-    height: 18px;
-    padding: 0 2px;
-    background: var(--panel);
-    border: 2px solid var(--accent-dark);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--title-font);
-    font-size: 9px;
-    color: var(--ink);
-    text-transform: lowercase;
-    box-shadow: 0 2px 0 rgba(0,0,0,0.35);
-  }
-  @media (max-width: 700px) {
-    .header-welcome { display: none; }
-  }
-  header .brand {
-    font-family: var(--title-font);
-    font-size: 15px;
-    letter-spacing: 0.05em;
-    color: #fdfaf2;
-  }
-  header .brand::before {
-  content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='1' y='6' width='1' height='1'/><rect x='2' y='6' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='5' y='6' width='1' height='1'/><rect x='6' y='6' width='1' height='1'/><rect x='0' y='7' width='1' height='1'/><rect x='1' y='7' width='1' height='1'/><rect x='2' y='7' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/><rect x='5' y='7' width='1' height='1'/><rect x='6' y='7' width='1' height='1'/><rect x='7' y='7' width='1' height='1'/></svg>");
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  vertical-align: -1px;
-  margin-right: 6px;
-  image-rendering: pixelated;
+* { box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(180deg, #cfe0f0 0%, #eef3f8 55%, #f4f2ee 100%);
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow-y: auto;
 }
-  header button {
-    background: var(--panel);
-    border: 2px solid var(--accent-dark);
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 13px;
-    font-family: var(--body-font);
-    font-weight: 600;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.25);
-    color: var(--ink-soft);
-    cursor: pointer;
-  }
-  header button:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+h1 { font-size: 20px; color: #333; margin-bottom: 4px; }
 
-  .app-body {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 56px;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .side-deco {
-    flex: 0 0 220px;
-    position: sticky;
-    top: 110px;
-    z-index: 0;
-  }
-  @media (max-width: 1080px) {
-    .side-deco { display: none; }
-  }
-  #app-view main {
-    max-width: 680px;
-    flex: 1 1 620px;
-    margin: 0;
-    padding: 48px 0;
-  }
-  @media (max-width: 900px) {
-    #app-view main { padding: 32px 20px; }
-    .app-body { padding: 0; }
-  }
-  .side-deco { flex: 0 0 240px; }
-
-  .resumo-stats { display: flex; flex-direction: column; gap: 14px; }
-  .resumo-stat { display: flex; flex-direction: column; }
-  .resumo-num {
-    font-family: var(--title-font);
-    font-size: 26px;
-    color: var(--accent-dark);
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .resumo-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
-  .resumo-sites {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--line);
-  }
-  .resumo-sites-label {
-    display: block;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-  }
-  .resumo-sites-list { display: flex; flex-direction: column; gap: 6px; }
-  .resumo-sites-list span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--ink);
-    padding: 6px 10px;
-    background: var(--accent-soft);
-    border-radius: 6px;
-  }
-  .empty {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 30px 10px 10px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--ink-soft);
-  }
-
-  #home-view .side-deco > .card { margin-bottom: 20px; }
-
-  .detail-side {
-    flex: 0 0 340px;
-    position: sticky;
-    top: 110px;
-    margin-top: 44px;
-  }
-  #detail-view { flex-wrap: wrap; align-items: flex-start; }
-  @media (max-width: 1080px) {
-    .detail-side { position: static; flex: 1 1 100%; order: -1; margin-top: 0; }
-    #detail-view main { flex: 1 1 100%; }
-  }
-
-  /* Login */
-  #login-view {
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background:
-      repeating-conic-gradient(var(--bg) 0% 25%, var(--accent-soft) 0% 50%) 0 0/26px 26px;
-  }
-  .login-stage {
-    min-height: 100vh;
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 40px 24px;
-    display: grid;
-    grid-template-columns: minmax(220px, 360px) minmax(300px, 540px);
-    align-items: center;
-    justify-content: center;
-    gap: 64px;
-  }
-  .deco-window {
-    background: var(--panel);
-    border: 2px solid var(--accent-dark);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 4px 4px 0 rgba(92, 118, 84, 0.35);
-  }
-  .deco-titlebar {
-    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: #fdfaf2;
-    font-family: var(--title-font);
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .deco-menubar {
-    display: flex;
-    gap: 12px;
-    padding: 5px 10px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--line);
-    font-size: 10px;
-    color: var(--ink-soft);
-  }
-  .deco-icon { display: inline-flex; vertical-align: -2px; image-rendering: pixelated; }
-  .deco-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    background: repeating-conic-gradient(#e2ddc9 0% 25%, #ece7d4 0% 50%) 0 0/20px 20px;
-    padding: 10px;
-    gap: 8px;
-  }
-  .deco-cell {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-  }
-  .deco-footer {
-    padding: 10px 12px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .deco-caption {
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-family: var(--title-font);
-    letter-spacing: 0.5px;
-  }
-  .palette-swatch { display: flex; gap: 3px; }
-  .palette-swatch span {
-    width: 12px; height: 12px; border-radius: 2px;
-    border: 1px solid rgba(74,67,53,0.25);
-  }
-  @media (max-width: 860px) {
-    .login-stage { grid-template-columns: 1fr; }
-    .deco-window { display: none; }
-    .deco-window-small { display: none; }
-  }
-  .deco-stack { position: relative; }
-  .deco-window-small {
-    width: 74%;
-    margin: -20px 0 0 auto;
-    transform: rotate(-2.5deg);
-    position: relative;
-    z-index: 1;
-  }
-  .deco-window-mini {
-    width: 50%;
-    margin: -30px auto 0 0;
-    transform: rotate(-7deg);
-    position: relative;
-    z-index: 2;
-  }
-  .deco-window-mini .deco-grid { grid-template-columns: repeat(2, 1fr); padding: 8px; gap: 6px; }
-  .deco-window-mini .deco-cell { padding: 6px; }
-  @media (max-width: 860px) {
-    .deco-window-mini { display: none; }
-  }
-  .deco-swatch-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    padding: 12px;
-  }
-  .deco-swatch-grid span {
-    aspect-ratio: 1;
-    border-radius: 4px;
-    border: 1px solid rgba(74,67,53,0.2);
-  }
-
-  #login-view main { position: relative; z-index: 1; }
-  .login-card {
-    background: var(--panel);
-    border: 2px solid var(--accent-dark);
-    border-radius: 10px;
-    padding: 0;
-    width: 100%;
-    max-width: 540px;
-    overflow: hidden;
-    box-shadow: 4px 4px 0 rgba(92, 118, 84, 0.35);
-  }
-  .login-card-titlebar {
-    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: #fdfaf2;
-    font-family: var(--title-font);
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .login-card-titlebar .dots { display: flex; gap: 5px; }
-  .login-card-titlebar .dots span {
-    width: 9px; height: 9px; border-radius: 50%;
-    background: rgba(253,250,242,0.85);
-    display: inline-block;
-    border: 1px solid rgba(92,118,84,0.5);
-  }
-  .login-card-body { padding: 30px 48px 14px; }
-  @media (max-width: 480px) {
-    .login-card-body { padding: 26px 26px 10px; }
-  }
-  .login-card h1 {
-    font-family: var(--title-font);
-    font-size: 16px;
-    margin: 0 0 10px;
-    color: var(--accent-dark);
-  }
-  .login-card p {
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin: 0 0 28px;
-  }
-  label {
-    display: block;
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin: 18px 0 7px;
-    font-weight: 600;
-  }
-  input, select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid var(--line);
-    border-radius: 6px;
-    font-size: 15px;
-    font-family: var(--body-font);
-    background: #fff;
-    color: var(--ink);
-    box-shadow: inset 1px 1px 0 rgba(74,67,53,0.08);
-  }
-  input:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-  button.primary {
-    margin-top: 26px;
-    width: 100%;
-    background: var(--accent);
-    color: #fdfaf2;
-    border: 2px solid var(--accent-dark);
-    border-radius: 6px;
-    padding: 13px;
-    font-size: 15px;
-    font-family: var(--body-font);
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 2px 2px 0 var(--accent-dark);
-  }
-  button.primary:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--accent-dark); }
-  button.primary:active { transform: translate(2px, 2px); box-shadow: none; }
-  button.primary:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: 2px 2px 0 var(--accent-dark); }
-
-  .error {
-    margin-top: 14px;
-    font-size: 13px;
-    color: var(--danger);
-  }
-
-  /* Dashboard */
-  h2 {
-    font-family: var(--title-font);
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    margin: -22px -22px 16px -22px;
-    padding: 10px 16px;
-    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: #fdfaf2;
-    border-radius: 8px 8px 0 0;
-  }
-  h2::before {
-  content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='2' y='0' width='1' height='1'/><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='1' y='1' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='0' y='2' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='0' y='3' width='1' height='1'/><rect x='1' y='3' width='1' height='1'/><rect x='2' y='3' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='5' y='3' width='1' height='1'/><rect x='6' y='3' width='1' height='1'/><rect x='1' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='5' y='4' width='1' height='1'/><rect x='2' y='5' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/></svg>");
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  vertical-align: -1px;
-  margin-right: 6px;
-  image-rendering: pixelated;
+/* ---------- Página inicial ---------- */
+#landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(160deg, #ffe27a 0%, #ffb6d9 45%, #a3d9ff 100%);
+  border-radius: 28px;
+  padding: 30px 20px;
+  position: relative;
+  overflow: hidden;
 }
-  .section-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 20px; padding: 0 2px; }
-  .search-box {
-    position: relative;
-    margin: 2px 0 14px;
-  }
-  .search-box svg {
-    position: absolute;
-    left: 11px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .search-box input {
-    padding-left: 32px;
-  }
+#landing::before,
+#landing::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+#landing::before { width: 140px; height: 140px; top: -50px; left: -40px; }
+#landing::after { width: 100px; height: 100px; bottom: -30px; right: -20px; }
 
-  .card {
-    background: var(--panel);
-    border: 2px solid var(--accent-dark);
-    border-radius: 10px;
-    padding: 0 34px 34px;
-    margin-bottom: 28px;
-    box-shadow: 3px 3px 0 rgba(92, 118, 84, 0.25);
-    overflow: hidden;
-  }
-  .card > h2:first-child,
-  .card > h2 {
-    font-family: var(--title-font);
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    color: #fdfaf2;
-    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-    margin: 0 -34px 18px;
-    padding: 9px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .card > h2::after {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(253,250,242,0.85);
-    box-shadow: -13px 0 0 rgba(253,250,242,0.85), -26px 0 0 rgba(253,250,242,0.55);
-    margin-right: 8px;
-  }
-  .card > h2::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' fill='%23fdfaf2'><rect x='2' y='0' width='1' height='1'/><rect x='3' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='1' y='1' width='1' height='1'/><rect x='2' y='1' width='1' height='1'/><rect x='3' y='1' width='1' height='1'/><rect x='4' y='1' width='1' height='1'/><rect x='5' y='1' width='1' height='1'/><rect x='0' y='2' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='2' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='4' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='6' y='2' width='1' height='1'/><rect x='0' y='3' width='1' height='1'/><rect x='1' y='3' width='1' height='1'/><rect x='2' y='3' width='1' height='1'/><rect x='3' y='3' width='1' height='1'/><rect x='4' y='3' width='1' height='1'/><rect x='5' y='3' width='1' height='1'/><rect x='6' y='3' width='1' height='1'/><rect x='1' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='3' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='5' y='4' width='1' height='1'/><rect x='2' y='5' width='1' height='1'/><rect x='3' y='5' width='1' height='1'/><rect x='4' y='5' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='4' y='6' width='1' height='1'/><rect x='3' y='7' width='1' height='1'/><rect x='4' y='7' width='1' height='1'/></svg>");
-    display: inline-block;
-    width: 11px;
-    height: 11px;
-    vertical-align: -1px;
-    margin-right: 8px;
-    image-rendering: pixelated;
-  }
+.window-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 18px;
+  border: 5px solid #ff8fb3;
+  border-radius: 20px;
+  position: relative;
+  background: linear-gradient(135deg, #fff4b8 0%, #ffd3e6 50%, #bfe6ff 100%);
+  box-shadow: 0 8px 0 rgba(255, 143, 179, 0.35);
+  animation: bounce 2.2s ease-in-out infinite;
+}
+.window-icon::before,
+.window-icon::after {
+  content: "";
+  position: absolute;
+  background: #ff8fb3;
+  border-radius: 3px;
+}
+.window-icon::before { left: 50%; top: 8px; bottom: 8px; width: 6px; transform: translateX(-50%); }
+.window-icon::after { top: 50%; left: 8px; right: 8px; height: 6px; transform: translateY(-50%); }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
 
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+#landing h1 {
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 40px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #ff8fb3, -1px -1px 0 #ff8fb3, 1px -1px 0 #ff8fb3, -1px 1px 0 #ff8fb3;
+  margin-bottom: 10px;
+}
+#landing p {
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 17px;
+  color: #5a4a6b;
+  margin-bottom: 26px;
+  max-width: 360px;
+}
+#landingStartBtn {
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 14px 48px;
+  background: #ff8fb3;
+  border-radius: 50px;
+  box-shadow: 0 6px 0 #e06e94;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+#landingStartBtn:hover { background: #ff7aa5; }
+#landingStartBtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #e06e94; }
 
-  ul.profile-list { list-style: none; padding: 0; margin: 0; }
-  ul.profile-list li {
-    padding: 13px 0;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-  }
-  ul.profile-list li:last-child { border-bottom: none; }
-  .profile-name { font-weight: 600; }
-  .profile-meta { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-  .profile-actions { display: flex; align-items: center; gap: 8px; }
-  .link-btn {
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    background: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .link-btn:hover { background: var(--accent-soft); }
-  .danger-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    background: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    font-family: var(--body-font);
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .danger-btn:hover { background: rgba(181,101,79,0.1); }
-  .sessao-item .danger-btn { padding: 4px 8px; font-size: 11px; }
-  .link-row {
-    display: none;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--line);
-    flex-direction: column;
-    gap: 8px;
-  }
-  .link-row.open { display: flex; }
-  .site-choices { display: flex; gap: 6px; }
-  .site-choices button {
-    flex: 1;
-    border: 1px solid var(--line);
-    background: #fff;
-    border-radius: 6px;
-    padding: 7px;
-    font-size: 12px;
-    cursor: pointer;
-    color: var(--ink-soft);
-  }
-  .site-choices button:hover { border-color: var(--accent); color: var(--accent); }
-  .generated-link {
-    display: none;
-    background: var(--accent-soft);
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 12px;
-    word-break: break-all;
-    color: var(--ink);
-  }
-  .generated-link.show { display: block; }
-  .copy-btn {
-    margin-top: 6px;
-    border: none;
-    background: var(--accent);
-    color: #fff;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .expira-info { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
-  ul.profile-list li { flex-direction: column; align-items: stretch; }
-  .profile-top-row { display: flex; justify-content: space-between; align-items: center; }
+/* Botão discreto de encerrar/avançar — só aparece a partir da 2ª tarefa de cada parte */
+#exitBtn {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  font-size: 11px;
+  padding: 5px 10px;
+  background: rgba(120, 120, 120, 0.25);
+  color: #666;
+  border-radius: 5px;
+  z-index: 10;
+  display: none;
+  opacity: 0.6;
+}
+#exitBtn:hover { background: rgba(120, 120, 120, 0.45); opacity: 1; }
 
-  .sessoes-list { margin-top: 12px; display: none; flex-direction: column; gap: 8px; }
-  .sessoes-list.open { display: flex; }
-  .sessao-item {
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .status-tag {
-    font-size: 11px;
-    padding: 2px 8px 2px 6px;
-    border-radius: 100px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .status-tag svg { image-rendering: pixelated; flex-shrink: 0; }
-  .status-concluido { background: #e3eff8; color: var(--accent); }
-  .status-pendente { background: #fdf3e3; color: #9a6a1f; }
-  .status-expirado { background: #f3e5e3; color: var(--danger); }
+#testArea {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+#status {
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #444;
+  text-align: center;
+  max-width: 520px;
+}
+#answerReveal {
+  display: none;
+  font-size: 17px;
+  font-weight: bold;
+  color: #2e7d3d;
+  margin-bottom: 8px;
+}
 
-  .name-tiles { display: inline-flex; gap: 3px; flex-wrap: wrap; }
-  .name-tile {
-    min-width: 20px;
-    height: 20px;
-    padding: 0 2px;
-    background: var(--accent);
-    border: 2px solid var(--accent-dark);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--title-font);
-    font-size: 10px;
-    color: #fdfaf2;
-    text-transform: lowercase;
-    box-shadow: 0 3px 0 var(--accent-dark);
-  }
-  .cadastrado-por {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 16px 0 0;
-    font-size: 11px;
-    color: var(--ink-soft);
-  }
-  .ver-prints-btn {
-    border: none;
-    background: none;
-    color: var(--accent);
-    font-size: 12px;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+#board {
+  position: relative;
+  width: min(92vw, 1100px);
+  height: min(60vh, 640px);
+  background: #fdfcfa;
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+.square {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  background: #fdfcfa;
+  border: 3px solid #222;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.square.lit { background-color: #000; border-color: #000; }
+.square.correct { background-color: #000; border-color: #000; }
+.square.wrong { background-color: #000; border-color: #000; }
+.square.disabled { cursor: default; }
 
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(20,30,40,0.55);
-    align-items: center; justify-content: center;
-    z-index: 999999;
-    padding: 24px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: #fff;
-    border-radius: 14px;
-    max-width: 900px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 22px;
-  }
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px;
-  }
-  .modal-close {
-    border: none; background: none; font-size: 20px; cursor: pointer; color: var(--ink-soft);
-  }
-  .prints-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-  }
-  .print-card { text-align: center; }
-  .print-card img {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    cursor: pointer;
-  }
-  .print-card .etapa-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+#controls { margin-top: 20px; }
+button {
+  font-size: 15px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+}
+button:disabled { background: #aaa; cursor: default; }
 
-  .cubo-mini-wrap {
-    perspective: 400px;
-    width: 100%;
-    height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f3f7fa;
-    border-radius: 8px;
-    margin-bottom: 4px;
-  }
-  .cubo-mini-scene {
-    width: 50px;
-    height: 50px;
-    position: relative;
-    transform-style: preserve-3d;
-  }
-  .cubo-mini-face {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border: 1px solid rgba(47,102,144,0.5);
-    background: rgba(47,102,144,0.18);
-  }
-  .cubo-mini-front  { transform: translateZ(25px); }
-  .cubo-mini-back   { transform: rotateY(180deg) translateZ(25px); }
-  .cubo-mini-right  { transform: rotateY(90deg) translateZ(25px); }
-  .cubo-mini-left   { transform: rotateY(-90deg) translateZ(25px); }
-  .cubo-mini-top    { transform: rotateX(90deg) translateZ(25px); }
-  .cubo-mini-bottom { transform: rotateX(-90deg) translateZ(25px); }
-  .cubos-mini-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-
-  .montagem-2d {
-    position: relative;
-    margin: 0 auto 4px;
-    background: #f3f7fa;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: zoom-in;
-  }
-  .peca-2d {
-    position: absolute;
-    background-size: cover;
-    background-position: center;
-    box-sizing: border-box;
-  }
-  .sequencia-numeros {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 14px 6px;
-    background: #f3f7fa;
-    border-radius: 8px;
-    margin-bottom: 4px;
-  }
-  .chip-numero {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 26px;
-    height: 26px;
-    padding: 0 6px;
-    border-radius: 6px;
-    background: var(--accent);
-    color: #fff;
-    font-family: var(--title-font);
-    font-size: 13px;
-  }
+#results {
+  margin-top: 24px;
+  font-size: 15px;
+  color: #333;
+  white-space: pre-line;
+  text-align: left;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  display: none;
+  max-width: 520px;
+}
 </style>
 </head>
 <body>
 
-<div id="login-view">
-  <div class="login-stage">
-    <div class="deco-stack">
-    <div class="deco-window">
-      <div class="deco-titlebar">
-        <span>ferramentas.pix</span>
-        <span class="win-dots"><span></span><span></span><span></span></span>
-      </div>
-      <div class="deco-menubar">
-        <span>Arquivo</span><span>Editar</span><span>Ver</span>
-      </div>
-      <div class="deco-grid">
-        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="26" height="26" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="22" height="22" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#7c9473" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(8deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(-6deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-      </div>
-      <div class="deco-footer">
-        <span class="deco-caption">hub de testes</span>
-        <div class="palette-swatch">
-          <span style="background:#7c9473;"></span>
-          <span style="background:#5c7654;"></span>
-          <span style="background:#e4ead9;"></span>
-          <span style="background:#e3aeb0;"></span>
-          <span style="background:#fdfaf2;"></span>
-        </div>
-      </div>
-    </div>
-    <div class="deco-window deco-window-small">
-      <div class="deco-titlebar">
-        <span>paleta.pix</span>
-        <span class="win-dots"><span></span><span></span><span></span></span>
-      </div>
-      <div class="deco-swatch-grid">
-        <span style="background:#7c9473;"></span>
-        <span style="background:#5c7654;"></span>
-        <span style="background:#e4ead9;"></span>
-        <span style="background:#e3aeb0;"></span>
-        <span style="background:#b5654f;"></span>
-        <span style="background:#fdfaf2;"></span>
-        <span style="background:#cdbfa0;"></span>
-        <span style="background:#eef0e3;"></span>
-      </div>
-    </div>
-    <div class="deco-window deco-window-mini">
-      <div class="deco-titlebar">
-        <span>flora.pix</span>
-        <span class="win-dots"><span></span><span></span><span></span></span>
-      </div>
-      <div class="deco-grid">
-        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#7c9473" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(8deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated; transform:rotate(-6deg);"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-      </div>
-    </div>
-    </div>
-  <main style="padding:0;">
-    <div class="login-card">
-      <div class="login-card-titlebar">
-        <span>hub.login</span>
-        <span class="dots"><span></span><span></span><span></span></span>
-      </div>
-      <div class="login-card-body">
-        <h1>Hub</h1>
-        <p>Entre com sua conta para gerenciar perfis.</p>
-        <form id="login-form">
-          <label for="login-usuario">Usuário</label>
-          <input id="login-usuario" type="text" required autocomplete="username">
-          <label for="senha">Senha</label>
-          <input id="senha" type="password" required autocomplete="current-password">
-          <button class="primary" type="submit" id="login-btn">Entrar</button>
-        </form>
-        <div class="error" id="login-error" style="display:none;"></div>
-        <p style="text-align:center; margin-top:18px; font-size:13px;">
-          <a href="#" id="show-request-link" style="color:var(--accent);">Solicitar acesso</a>
-        </p>
-
-        <form id="request-form" style="display:none;">
-          <label for="req-nome">Nome</label>
-          <input id="req-nome" type="text" required>
-          <label for="req-usuario">Usuário</label>
-          <input id="req-usuario" type="text" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9._-]+" title="Letras, números, ponto, traço ou underline">
-          <label for="req-senha">Senha</label>
-          <input id="req-senha" type="password" required minlength="6">
-          <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
-          <p style="text-align:center; margin-top:12px; font-size:13px;">
-            <a href="#" id="show-login-link" style="color:var(--accent);">Voltar para o login</a>
-          </p>
-        </form>
-        <div class="error" id="request-error" style="display:none;"></div>
-        <div id="request-success" style="display:none; margin-top:14px; font-size:13px; color:var(--accent);">
-          Pedido enviado! Assim que for aprovado, você já pode entrar com esse usuário e senha.
-        </div>
-      </div>
-    </div>
-  </main>
+<div id="hubGate" style="position:fixed;inset:0;background:linear-gradient(135deg,#f7f6f3,#eae7e2);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:'Inter',Arial,sans-serif;color:#1a1a1a;">
+  <div style="background:#fff;padding:40px 36px;border-radius:18px;box-shadow:0 15px 40px rgba(0,0,0,0.12);width:320px;text-align:center;">
+    <h1 id="hubGateTitulo" style="font-size:1.3rem;font-weight:600;margin-bottom:6px;">🔒 Verificando acesso</h1>
+    <p id="hubGateSubtitulo" style="font-size:0.85rem;color:#666;margin-bottom:8px;">Só um instante...</p>
+    <div id="hubGateSpinner" style="width:28px;height:28px;margin:18px auto 0;border:3px solid #ddd;border-top-color:#222;border-radius:50%;animation:hubGateSpin 0.8s linear infinite;"></div>
+    <div id="hubGateMsg" style="margin-top:14px;font-size:0.85rem;color:#c0392b;min-height:18px;"></div>
   </div>
 </div>
+<style>@keyframes hubGateSpin { to { transform: rotate(360deg); } }</style>
 
-<div id="app-view" style="display:none;">
-  <header>
-    <span class="brand">Hub</span>
-    <div class="header-welcome" id="header-welcome" style="display:none;">
-      <span>Bem-vindo,</span>
-      <div class="name-tiles" id="header-nome-tiles"></div>
-    </div>
-    <div style="display:flex; align-items:center; gap:16px;">
-      <span class="win-dots"><span></span><span></span><span></span></span>
-      <button id="logout-btn">Sair</button>
-    </div>
-  </header>
-  <div class="app-body" id="home-view">
-  <main>
-    <div class="card">
-      <h2>Novo perfil</h2>
-      <p class="section-sub">Cadastre uma pessoa para depois gerar links de teste.</p>
-      <form id="profile-form">
-        <label for="nome">Nome</label>
-        <input id="nome" type="text" required>
-        <div class="grid-2">
-          <div>
-            <label for="nascimento">Data de nascimento</label>
-            <input id="nascimento" type="date">
-          </div>
-          <div>
-            <label for="genero">Gênero</label>
-            <select id="genero">
-              <option value="">Não informado</option>
-              <option value="feminino">Feminino</option>
-              <option value="masculino">Masculino</option>
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-        </div>
-        <button class="primary" type="submit" id="save-btn">Salvar perfil</button>
-      </form>
-      <div class="error" id="profile-error" style="display:none;"></div>
-    </div>
+<script>
+const SUPABASE_URL = "https://bjzmlvsskhfrkvblvsjj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_YEHAM35S4jsY_dKoN5mwzg_YOVoVWJR";
+const SITE = "spanvisuo";
+let hubToken = null;
+let hubSessaoId = null;
 
-    <div class="card" id="pending-card" style="display:none;">
-      <h2>Pedidos pendentes</h2>
-      <p class="section-sub">Pessoas aguardando aprovação para acessar o hub.</p>
-      <ul class="profile-list" id="pending-list"></ul>
-    </div>
+function hubMostrarErro(texto) {
+  document.getElementById('hubGateSpinner').style.display = 'none';
+  document.getElementById('hubGateTitulo').textContent = '🔒 Acesso restrito';
+  document.getElementById('hubGateSubtitulo').textContent = 'Não foi possível liberar a entrada.';
+  document.getElementById('hubGateMsg').textContent = texto;
+}
 
-    <div class="card" id="lista-perfis-card">
-      <h2>Perfis cadastrados</h2>
-      <div class="search-box">
-        <svg width="13" height="13" viewBox="0 0 8 8" fill="#8a8270" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="3" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>
-        <input id="busca-perfil" type="text" placeholder="Buscar paciente pelo nome...">
-      </div>
-      <p class="section-sub" id="count-sub">&nbsp;</p>
-      <ul class="profile-list" id="profile-list"></ul>
-      <div class="empty" id="empty-msg" style="display:none;">
-        <svg width="34" height="34" viewBox="0 0 8 8" fill="#cdbfa0" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="1" y="2" width="2" height="1"/><rect x="0" y="3" width="8" height="1"/><rect x="0" y="4" width="8" height="3"/><rect x="1" y="4" width="1" height="1" fill="#fdfaf2"/><rect x="1" y="3" width="1" height="4" fill="#fdfaf2"/></svg>
-        <span id="empty-msg-text">Nenhum perfil cadastrado ainda.</span>
-      </div>
-    </div>
-  </main>
+function hubLiberarAcesso() {
+  document.getElementById('hubGate').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+}
 
-  <div class="side-deco">
-    <div class="card" id="resumo-card">
-      <h2>Resumo</h2>
-      <div class="resumo-stats">
-        <div class="resumo-stat">
-          <span class="resumo-num"><svg class="deco-icon" width="14" height="14" viewBox="0 0 8 8" fill="#e3aeb0" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="0" width="1" height="1"/><rect x="2" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="0" y="1" width="4" height="1"/><rect x="4" y="1" width="4" height="1"/><rect x="0" y="2" width="8" height="1"/><rect x="0" y="3" width="8" height="1"/><rect x="1" y="4" width="6" height="1"/><rect x="2" y="5" width="4" height="1"/><rect x="3" y="6" width="2" height="1"/></svg><span id="resumo-total">0</span></span>
-          <span class="resumo-label">perfis cadastrados</span>
-        </div>
-        <div class="resumo-stat" id="resumo-pendentes-row" style="display:none;">
-          <span class="resumo-num"><span id="resumo-pendentes">0</span></span>
-          <span class="resumo-label">pedidos pendentes</span>
-        </div>
-      </div>
-      <div class="resumo-sites">
-        <span class="resumo-sites-label">Sites disponíveis</span>
-        <div class="resumo-sites-list">
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Cubos</span>
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras</span>
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Armar Objetos</span>
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Janelas Digitais</span>
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Span Visuoespacial</span>
-          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras (infantil)</span>
-        </div>
-      </div>
-    </div>
-    <div class="deco-window">
-      <div class="deco-titlebar">
-        <span>hub.ini</span>
-        <span class="win-dots"><span></span><span></span><span></span></span>
-      </div>
-      <div class="deco-menubar">
-        <span>Perfis</span><span>Sessões</span><span>Ajuda</span>
-      </div>
-      <div class="deco-grid">
-        <div class="deco-cell"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="20" height="20" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg></div>
-        <div class="deco-cell"><svg width="24" height="24" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg></div>
-      </div>
-      <div class="deco-footer">
-        <span class="deco-caption">hub de testes</span>
-        <div class="palette-swatch">
-          <span style="background:#7c9473;"></span>
-          <span style="background:#5c7654;"></span>
-          <span style="background:#e4ead9;"></span>
-          <span style="background:#e3aeb0;"></span>
-          <span style="background:#fdfaf2;"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
+async function hubValidarToken(token) {
+  try {
+    const resp = await fetch(SUPABASE_URL + "/functions/v1/validar-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY },
+      body: JSON.stringify({ token, site: SITE })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      hubToken = token;
+      hubSessaoId = data.sessao_id;
+      hubLiberarAcesso();
+      return;
+    }
+    hubMostrarErro(data.motivo || "Link inválido ou expirado.");
+  } catch (e) {
+    hubMostrarErro("Erro ao verificar o link. Tente novamente.");
+  }
+}
 
-  <div class="app-body" id="detail-view" style="display:none;">
-  <main>
-    <button id="voltar-lista-btn" class="link-btn" style="margin-bottom:16px;">← Voltar aos perfis</button>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("t");
+  if (token) {
+    hubValidarToken(token);
+  } else {
+    hubMostrarErro("O acesso a este teste é feito apenas por um link individual, gerado pelo hub.");
+  }
+})();
+</script>
 
-    <div class="card">
-      <h2>Sessões</h2>
-      <p class="section-sub">Links já gerados para este perfil e seus resultados.</p>
-      <div class="sessoes-list open" id="detalhe-sessoes-list"></div>
-    </div>
-  </main>
+<button id="exitBtn">encerrar</button>
 
-  <div class="detail-side">
-    <div class="card">
-      <h2 id="detalhe-nome">&nbsp;</h2>
-      <p class="section-sub" id="detalhe-meta" style="margin:30px 0 16px;">&nbsp;</p>
-      <div class="cadastrado-por" id="detalhe-cadastrado-por" style="display:none;">
-        <span>cadastrado por</span>
-        <div class="name-tiles" id="detalhe-nome-tiles"></div>
-      </div>
-      <button id="excluir-perfil-btn" class="danger-btn" title="Excluir perfil" style="width:100%; justify-content:center; margin-top:24px;">
-        <svg width="13" height="13" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
-        Excluir perfil
-      </button>
-    </div>
-
-    <div class="card">
-      <h2>Gerar link</h2>
-      <p class="section-sub" id="detalhe-gerar-link-sub">Escolha o site para criar um link individual e temporário.</p>
-      <div class="site-choices" id="site-choices-adulto">
-        <button id="detalhe-site-cubos">Cubos</button>
-        <button id="detalhe-site-adf">Arranjo de Figuras</button>
-        <button id="detalhe-site-ao">Armar Objetos</button>
-      </div>
-      <div class="site-choices" id="site-choices-crianca" style="display:none;">
-        <button id="detalhe-site-jdneup">Janelas Digitais</button>
-        <button id="detalhe-site-spanvisuo">Span Visuoespacial</button>
-        <button id="detalhe-site-adfwnv">Arranjo de Figuras (infantil)</button>
-      </div>
-      <p class="section-sub" id="site-choices-sem-idade" style="display:none; margin-top:4px;">Informe a data de nascimento do perfil para liberar os testes.</p>
-      <div class="generated-link" id="detalhe-generated-link"></div>
-    </div>
-  </div>
-  </div>
+<div id="landing" style="display:none;">
+  <div class="window-icon"></div>
+  <h1>Span Visuoespacial</h1>
+  <p>Observe atentamente e responda quando for sua vez.</p>
+  <button id="landingStartBtn">Iniciar</button>
 </div>
 
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 id="modal-title">Prints da sessão</h2>
-      <button class="modal-close" id="modal-close">✕</button>
-    </div>
-    <div class="prints-grid" id="prints-grid"></div>
+<div id="testArea">
+  <div id="status">Clique em "Iniciar" para ver o tutorial.</div>
+  <div id="answerReveal"></div>
+  <div id="board"></div>
+  <div id="controls">
+    <button id="startBtn">Iniciar</button>
+    <button id="finishBtn" style="display:none;">Concluir sequência</button>
   </div>
-</div>
-
-<div class="modal-overlay" id="zoom-overlay" style="z-index:9999999;">
-  <div class="modal-box" style="max-width:960px;">
-    <div class="modal-header">
-      <h2>Reconstrução ampliada</h2>
-      <button class="modal-close" id="zoom-close">✕</button>
-    </div>
-    <div id="zoom-content" style="display:flex; align-items:center; justify-content:center; overflow:auto;"></div>
-  </div>
+  <div id="results"></div>
 </div>
 
 <script>
-  const SUPABASE_URL = "https://bjzmlvsskhfrkvblvsjj.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_YEHAM35S4jsY_dKoN5mwzg_YOVoVWJR";
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+document.getElementById('landingStartBtn').addEventListener('click', () => {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('testArea').style.display = 'flex';
+});
+</script>
 
-  const loginView = document.getElementById('login-view');
-  const appView = document.getElementById('app-view');
-  const loginForm = document.getElementById('login-form');
-  const loginError = document.getElementById('login-error');
-  const loginBtn = document.getElementById('login-btn');
-  const logoutBtn = document.getElementById('logout-btn');
-  const profileForm = document.getElementById('profile-form');
-  const profileError = document.getElementById('profile-error');
-  const saveBtn = document.getElementById('save-btn');
-  const profileList = document.getElementById('profile-list');
-  const emptyMsg = document.getElementById('empty-msg');
-  const countSub = document.getElementById('count-sub');
+<script>
+// Posições dos 10 quadrados (em % do tamanho do board), baseadas no tabuleiro físico das fotos.
+// id = número interno do quadrado (mesmo número que está no cubo físico correspondente)
+const SQUARES = [
+  { id: 1,  xPct: 15, yPct: 22 },
+  { id: 2,  xPct: 34, yPct: 36 },
+  { id: 3,  xPct: 24, yPct: 58 },
+  { id: 4,  xPct: 8,  yPct: 82 },
+  { id: 5,  xPct: 30, yPct: 88 },
+  { id: 6,  xPct: 54, yPct: 18 },
+  { id: 7,  xPct: 70, yPct: 28 },
+  { id: 8,  xPct: 60, yPct: 50 },
+  { id: 9,  xPct: 56, yPct: 74 },
+  { id: 10, xPct: 74, yPct: 84 },
+];
 
-  const EDGE_BASE = SUPABASE_URL + '/functions/v1';
+/* ===================== PARTE 1 — ORDEM DIRETA ===================== */
+const EXAMPLE_SEQUENCE_1 = [10, 1];
+const TRAINING_SEQUENCES_1 = [
+  [1, 6],
+  [5, 8],
+];
+const TASK_SEQUENCES_1 = [
+  [3, 10],
+  [7, 4],
+  [1, 9, 3],
+  [8, 2, 7],
+  [4, 9, 1, 6],
+  [10, 6, 2, 7],
+  [6, 5, 1, 4, 8],
+  [5, 7, 9, 8, 2],
+  [4, 1, 9, 3, 8, 10],
+  [9, 2, 6, 7, 3, 5],
+  [10, 1, 6, 4, 8, 5, 7],
+  [2, 6, 3, 8, 2, 10, 1],
+  [7, 3, 10, 5, 7, 8, 4, 9],
+  [6, 9, 3, 2, 1, 7, 10, 5],
+  [5, 8, 4, 10, 7, 3, 1, 9, 6],
+  [8, 2, 6, 1, 10, 3, 7, 4, 9],
+];
 
-  let usuariosMap = {};
+/* ===================== PARTE 2 — ORDEM INVERSA ===================== */
+// Os quadrados acendem nesta ordem, mas a resposta correta é a sequência invertida.
+const EXAMPLE_SEQUENCE_2 = [10, 1];
+const TRAINING_SEQUENCES_2 = [
+  [5, 8],
+  [1, 6],
+];
+const TASK_SEQUENCES_2 = [
+  [7, 4],
+  [3, 10],
+  [8, 2, 7],
+  [1, 9, 3],
+  [10, 6, 2, 7],
+  [4, 9, 1, 6],
+  [5, 7, 9, 8, 2],
+  [6, 5, 1, 4, 8],
+  [9, 2, 6, 7, 3, 5],
+  [4, 1, 9, 3, 8, 10],
+  [2, 6, 3, 8, 2, 10, 1],
+  [10, 1, 6, 4, 8, 5, 7],
+  [6, 9, 3, 2, 1, 7, 10, 5],
+  [7, 3, 10, 5, 7, 8, 4, 9],
+  [8, 2, 6, 1, 10, 3, 7, 4, 9],
+  [5, 8, 4, 10, 7, 3, 1, 9, 6],
+];
 
-  async function loadUsuarios() {
-    const { data, error } = await sb.from('usuarios').select('id, usuario, nome');
-    if (error || !data) return;
-    usuariosMap = {};
-    data.forEach(u => { usuariosMap[u.id] = u; });
+const FLASH_ON_MS = 700;   // duração de cada quadrado aceso
+const FLASH_GAP_MS = 300;  // pausa entre os quadrados da sequência
+const REVEAL_ON_MS = 500;  // duração do "replay" de cada quadrado ao revelar a resposta do tutorial
+const REVEAL_GAP_MS = 150;
+const TUTORIAL_FLASH_ON_MS = 1100;  // tutorial é mais devagar, já que a explicação é falada
+const TUTORIAL_FLASH_GAP_MS = 500;
+const TUTORIAL_REVEAL_ON_MS = 800;
+const TUTORIAL_REVEAL_GAP_MS = 300;
+
+function buildPhaseRounds(phase, direction, exampleSeq, trainingSeqs, taskSeqs) {
+  return [
+    { phase, direction, type: 'tutorial', idx: 0, total: 1, seq: exampleSeq },
+    ...trainingSeqs.map((seq, i) => ({ phase, direction, type: 'treino', idx: i, total: trainingSeqs.length, seq })),
+    ...taskSeqs.map((seq, i) => ({ phase, direction, type: 'tarefa', idx: i, total: taskSeqs.length, seq })),
+  ];
+}
+
+const ROUNDS = [
+  ...buildPhaseRounds(1, 'forward', EXAMPLE_SEQUENCE_1, TRAINING_SEQUENCES_1, TASK_SEQUENCES_1),
+  ...buildPhaseRounds(2, 'backward', EXAMPLE_SEQUENCE_2, TRAINING_SEQUENCES_2, TASK_SEQUENCES_2),
+];
+const PHASE2_START_INDEX = ROUNDS.findIndex(r => r.phase === 2);
+
+// ------------------------------------------------
+const board = document.getElementById('board');
+const statusEl = document.getElementById('status');
+const answerRevealEl = document.getElementById('answerReveal');
+const startBtn = document.getElementById('startBtn');
+const finishBtn = document.getElementById('finishBtn');
+const exitBtn = document.getElementById('exitBtn');
+const resultsEl = document.getElementById('results');
+
+let roundPointer = 0;
+let currentSequence = [];
+let expectedSequence = []; // igual à sequência mostrada (direta) ou invertida (inversa)
+let userInput = [];
+let acceptingClicks = false;
+let startBtnMode = 'start'; // 'start' = iniciar/ver rodada | 'continue' = avançar após revelar resposta do tutorial
+let results = []; // apenas treinos e tarefas: { phase, direction, type, idx, length, sequence, expected, userAnswer, correct }
+let sessionClicks = []; // rastreio bruto de cada clique, na ordem em que aconteceu, para toda a sessão
+
+// cria os elementos dos quadrados
+const squareEls = {};
+SQUARES.forEach(sq => {
+  const el = document.createElement('div');
+  el.className = 'square';
+  el.style.left = `calc(${sq.xPct}% - 36px)`;
+  el.style.top = `calc(${sq.yPct}% - 36px)`;
+  el.dataset.id = sq.id;
+  el.addEventListener('click', () => handleClick(sq.id, el));
+  board.appendChild(el);
+  squareEls[sq.id] = el;
+});
+
+function sleep(ms) {
+  return new Promise(res => setTimeout(res, ms));
+}
+
+function directionLabel(direction) {
+  return direction === 'backward' ? 'ordem inversa' : 'ordem direta';
+}
+
+function labelFor(round) {
+  if (round.type === 'tutorial') return `Tutorial (${directionLabel(round.direction)})`;
+  if (round.type === 'treino') return `Treino ${round.idx + 1} de ${round.total} (${directionLabel(round.direction)})`;
+  return null; // tarefas não exibem número nem contagem
+}
+
+function clearSquareStates() {
+  Object.values(squareEls).forEach(el => el.classList.remove('lit', 'correct', 'wrong'));
+}
+
+function setupRoundIntro() {
+  const round = ROUNDS[roundPointer];
+  answerRevealEl.style.display = 'none';
+  answerRevealEl.textContent = '';
+  clearSquareStates();
+  startBtnMode = 'start';
+
+  // botão discreto: escondido por padrão, só reaparece a partir da 2ª tarefa de cada parte
+  exitBtn.style.display = 'none';
+  if (round.type === 'tarefa' && round.idx >= 1) {
+    exitBtn.style.display = 'inline-block';
   }
 
-  function nomeParaTiles(texto, classe) {
-    const base = (texto || '?').trim().split(/\s+/)[0].replace(/[^a-zA-Z0-9]/g, '');
-    const letras = (base || '?').slice(0, 10).split('');
-    const cls = classe || 'name-tile';
-    return letras.map(l => `<span class="${cls}">${escapeHtml(l)}</span>`).join('');
+  if (round.type === 'tutorial') {
+    statusEl.textContent = '';
+    startBtn.textContent = 'Ver exemplo';
+  } else if (round.type === 'treino') {
+    statusEl.textContent = `Clique em "Iniciar" para começar — ${labelFor(round)}.`;
+    startBtn.textContent = `Iniciar ${labelFor(round)}`;
+  } else {
+    statusEl.textContent = '';
+    startBtn.textContent = 'Iniciar';
+  }
+  startBtn.style.display = 'inline-block';
+  startBtn.disabled = false;
+}
+
+async function playFlash(seq, onMs = FLASH_ON_MS, gapMs = FLASH_GAP_MS) {
+  acceptingClicks = false;
+  for (const id of seq) {
+    const el = squareEls[id];
+    el.classList.add('lit');
+    await sleep(onMs);
+    el.classList.remove('lit');
+    await sleep(gapMs);
+  }
+}
+
+async function revealAnswer(seq, onMs = REVEAL_ON_MS, gapMs = REVEAL_GAP_MS) {
+  for (const id of seq) {
+    const el = squareEls[id];
+    el.classList.add('lit');
+    await sleep(onMs);
+    el.classList.remove('lit');
+    el.classList.add('correct');
+    await sleep(gapMs);
+  }
+}
+
+function advanceRound() {
+  clearSquareStates();
+  answerRevealEl.style.display = 'none';
+  roundPointer++;
+  if (roundPointer < ROUNDS.length) {
+    setupRoundIntro();
+  } else {
+    showResults();
+  }
+}
+
+function jumpToPhase2() {
+  clearSquareStates();
+  answerRevealEl.style.display = 'none';
+  roundPointer = PHASE2_START_INDEX;
+  setupRoundIntro();
+}
+
+startBtn.addEventListener('click', async () => {
+  if (startBtnMode === 'continue') {
+    advanceRound();
+    return;
   }
 
-  async function carregarBoasVindas() {
-    const { data: { session } } = await sb.auth.getSession();
-    const user = session?.user;
-    if (!user) return;
-    const nome = user.user_metadata?.nome || user.user_metadata?.usuario || (user.email || '').split('@')[0];
-    document.getElementById('header-nome-tiles').innerHTML = nomeParaTiles(nome, 'name-tile-light');
-    document.getElementById('header-welcome').style.display = 'flex';
+  const round = ROUNDS[roundPointer];
+  startBtn.disabled = true;
+  startBtn.style.display = 'none';
+  currentSequence = round.seq;
+  expectedSequence = round.direction === 'backward' ? [...currentSequence].reverse() : [...currentSequence];
+
+  if (round.type === 'tutorial') {
+    statusEl.textContent = '';
+    await sleep(600);
+    await playFlash(currentSequence, TUTORIAL_FLASH_ON_MS, TUTORIAL_FLASH_GAP_MS);
+    await sleep(400);
+    await revealAnswer(expectedSequence, TUTORIAL_REVEAL_ON_MS, TUTORIAL_REVEAL_GAP_MS);
+    answerRevealEl.textContent = `Resposta: ${expectedSequence.join(' → ')}`;
+    answerRevealEl.style.display = 'block';
+    startBtnMode = 'continue';
+    startBtn.textContent = 'Continuar';
+    startBtn.style.display = 'inline-block';
+    startBtn.disabled = false;
+    return;
   }
 
-  function showApp() {
-    loginView.style.display = 'none';
-    appView.style.display = 'block';
-    loadUsuarios();
-    carregarBoasVindas();
-    loadProfiles();
-    loadPending();
-  }
-  function showLogin() {
-    appView.style.display = 'none';
-    loginView.style.display = 'flex';
-  }
+  const introLabel = round.type === 'treino' ? labelFor(round) : '';
+  statusEl.textContent = introLabel ? `${introLabel} — observe...` : '';
+  await sleep(500);
+  await playFlash(currentSequence);
+  acceptingClicks = true;
+  userInput = [];
+  finishBtn.style.display = 'inline-block';
+  statusEl.textContent = introLabel ? `${introLabel} — sua vez` : 'Sua vez';
+});
 
-  // Alternar entre login e "solicitar acesso"
-  const showRequestLink = document.getElementById('show-request-link');
-  const showLoginLink = document.getElementById('show-login-link');
-  const requestForm = document.getElementById('request-form');
-  const requestError = document.getElementById('request-error');
-  const requestSuccess = document.getElementById('request-success');
-  const requestBtn = document.getElementById('request-btn');
+function handleClick(id, el) {
+  if (!acceptingClicks) return;
+  const round = ROUNDS[roundPointer];
+  const clickOrder = userInput.length; // posição (0-based) antes de adicionar
+  userInput.push(id);
+  const isCorrectSoFar = clickOrder < expectedSequence.length && expectedSequence[clickOrder] === id;
 
-  showRequestLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginForm.style.display = 'none';
-    showRequestLink.parentElement.style.display = 'none';
-    requestForm.style.display = 'block';
-    requestSuccess.style.display = 'none';
-  });
-  showLoginLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    requestForm.style.display = 'none';
-    loginForm.style.display = 'block';
-    showRequestLink.parentElement.style.display = 'block';
-  });
-
-  requestForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    requestError.style.display = 'none';
-    requestBtn.disabled = true;
-    requestBtn.textContent = 'Enviando...';
-
-    const nome = document.getElementById('req-nome').value.trim();
-    const usuario = document.getElementById('req-usuario').value.trim();
-    const senha = document.getElementById('req-senha').value;
-
-    try {
-      const res = await fetch(EDGE_BASE + '/solicitar-acesso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-        body: JSON.stringify({ nome, usuario, senha })
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Não foi possível enviar o pedido.');
-
-      requestForm.reset();
-      requestForm.style.display = 'none';
-      requestSuccess.style.display = 'block';
-    } catch (err) {
-      requestError.textContent = err.message;
-      requestError.style.display = 'block';
-    } finally {
-      requestBtn.disabled = false;
-      requestBtn.textContent = 'Enviar pedido';
-    }
-  });
-
-  async function loadPending() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) return;
-
-    const pendingCard = document.getElementById('pending-card');
-    const pendingList = document.getElementById('pending-list');
-
-    try {
-      const res = await fetch(EDGE_BASE + '/listar-pendentes', {
-        headers: { 'Authorization': 'Bearer ' + session.access_token, 'apikey': SUPABASE_KEY }
-      });
-      const json = await res.json();
-      const pendentes = json.pendentes || [];
-
-      pendingCard.style.display = pendentes.length > 0 ? 'block' : 'none';
-      const resumoPendRow = document.getElementById('resumo-pendentes-row');
-      const resumoPendNum = document.getElementById('resumo-pendentes');
-      if (resumoPendRow && resumoPendNum) {
-        resumoPendNum.textContent = pendentes.length;
-        resumoPendRow.style.display = pendentes.length > 0 ? 'flex' : 'none';
-      }
-      pendingList.innerHTML = '';
-
-      pendentes.forEach(p => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <div>
-            <div class="profile-name">${escapeHtml(p.nome || p.usuario)}</div>
-            <div class="profile-meta">@${escapeHtml(p.usuario)}</div>
-          </div>
-          <div>
-            <button class="approve-btn" data-id="${p.id}" style="border:1px solid var(--accent); color:var(--accent); background:none; border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer; margin-right:6px;">Aprovar</button>
-            <button class="reject-btn" data-id="${p.id}" style="border:1px solid var(--danger); color:var(--danger); background:none; border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer;">Recusar</button>
-          </div>
-        `;
-        pendingList.appendChild(li);
-      });
-
-      pendingList.querySelectorAll('.approve-btn').forEach(btn => {
-        btn.addEventListener('click', () => responderPedido(btn.dataset.id, 'aprovar'));
-      });
-      pendingList.querySelectorAll('.reject-btn').forEach(btn => {
-        btn.addEventListener('click', () => responderPedido(btn.dataset.id, 'recusar'));
-      });
-    } catch (err) {
-      pendingCard.style.display = 'none';
-    }
-  }
-
-  async function responderPedido(id, acao) {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) return;
-    await fetch(EDGE_BASE + '/responder-pedido', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + session.access_token,
-        'apikey': SUPABASE_KEY
-      },
-      body: JSON.stringify({ id, acao })
-    });
-    loadPending();
-  }
-
-  // Check existing session on load
-  sb.auth.getSession().then(({ data }) => {
-    if (data.session) showApp(); else showLogin();
-  });
-
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    loginError.style.display = 'none';
-    loginBtn.disabled = true;
-    loginBtn.textContent = 'Entrando...';
-    const usuarioInput = document.getElementById('login-usuario').value.trim().toLowerCase();
-    const senha = document.getElementById('senha').value;
-    const emailParaLogin = usuarioInput.includes('@') ? usuarioInput : usuarioInput + '@hub.interno';
-    const { error } = await sb.auth.signInWithPassword({ email: emailParaLogin, password: senha });
-    loginBtn.disabled = false;
-    loginBtn.textContent = 'Entrar';
-    if (error) {
-      loginError.textContent = 'Usuário ou senha incorretos.';
-      loginError.style.display = 'block';
-      return;
-    }
-    showApp();
-  });
-
-  logoutBtn.addEventListener('click', async () => {
-    await sb.auth.signOut();
-    showLogin();
-  });
-
-  profileForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    profileError.style.display = 'none';
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Salvando...';
-
-    const nome = document.getElementById('nome').value.trim();
-    const nascimento = document.getElementById('nascimento').value || null;
-    const genero = document.getElementById('genero').value || null;
-
-    const { error } = await sb.from('perfis').insert({
-      nome,
-      data_nascimento: nascimento,
-      genero
-    });
-
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Salvar perfil';
-
-    if (error) {
-      profileError.textContent = 'Não foi possível salvar: ' + error.message;
-      profileError.style.display = 'block';
-      return;
-    }
-
-    profileForm.reset();
-    loadProfiles();
-  });
-
-  let ultimosPerfis = [];
-
-  async function loadProfiles() {
-    const { data, error } = await sb
-      .from('perfis')
-      .select('*')
-      .order('criado_em', { ascending: false });
-
-    if (error) {
-      countSub.textContent = 'Erro ao carregar perfis.';
-      return;
-    }
-
-    ultimosPerfis = data;
-    const buscaInput = document.getElementById('busca-perfil');
-    renderProfileList(filtrarPerfis(data, buscaInput ? buscaInput.value : ''));
-  }
-
-  function filtrarPerfis(lista, termo) {
-    const t = (termo || '').trim().toLowerCase();
-    if (!t) return lista;
-    return lista.filter(p => p.nome.toLowerCase().includes(t));
-  }
-
-  function renderProfileList(data) {
-    profileList.innerHTML = '';
-
-    const total = ultimosPerfis.length;
-    countSub.textContent = data.length === total
-      ? (total === 1 ? '1 perfil' : total + ' perfis')
-      : data.length + ' de ' + total + ' perfis';
-    emptyMsg.style.display = data.length === 0 ? 'flex' : 'none';
-    document.getElementById('empty-msg-text').textContent = total === 0
-      ? 'Nenhum perfil cadastrado ainda.'
-      : 'Nenhum perfil encontrado para essa busca.';
-
-    const resumoTotalEl = document.getElementById('resumo-total');
-    if (resumoTotalEl) resumoTotalEl.textContent = total;
-
-    data.forEach(p => {
-      const li = document.createElement('li');
-      const meta = [];
-      if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
-      if (p.genero) meta.push(capitalize(p.genero));
-      li.innerHTML = `
-        <div class="profile-top-row" style="cursor:pointer;">
-          <div>
-            <div class="profile-name">${escapeHtml(p.nome)}</div>
-            <div class="profile-meta">${meta.join(' · ') || '—'}</div>
-          </div>
-          <div class="profile-actions">
-            <button class="link-btn">Abrir perfil →</button>
-          </div>
-        </div>
-      `;
-      li.addEventListener('click', () => abrirPerfil(p));
-      profileList.appendChild(li);
-    });
-  }
-
-  document.getElementById('busca-perfil').addEventListener('input', (e) => {
-    renderProfileList(filtrarPerfis(ultimosPerfis, e.target.value));
+  // rastreio bruto do clique — fica disponível para exportar/enviar ao hub mais tarde
+  sessionClicks.push({
+    phase: round.phase,
+    direction: round.direction,
+    type: round.type,
+    roundIdx: round.idx,
+    clickOrder: clickOrder + 1,
+    squareId: id,
+    correctAtThisPosition: isCorrectSoFar,
+    timestamp: Date.now()
   });
 
-  let perfilAtual = null;
+  el.classList.add(isCorrectSoFar ? 'correct' : 'wrong');
+  setTimeout(() => el.classList.remove('correct', 'wrong'), 300);
+}
 
-  function calcularIdade(dataNascimento) {
-    if (!dataNascimento) return null;
-    const nasc = new Date(dataNascimento + 'T00:00:00');
-    if (isNaN(nasc.getTime())) return null;
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nasc.getFullYear();
-    const aindaNaoFezAniversario = (hoje.getMonth() < nasc.getMonth()) ||
-      (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate());
-    if (aindaNaoFezAniversario) idade--;
-    return idade;
+function computeCorrect() {
+  return (
+    userInput.length === expectedSequence.length &&
+    userInput.every((v, i) => v === expectedSequence[i])
+  );
+}
+
+finishBtn.addEventListener('click', () => {
+  const round = ROUNDS[roundPointer];
+  acceptingClicks = false;
+  finishBtn.style.display = 'none';
+  const correct = computeCorrect();
+
+  // clique a clique desta rodada, retirado do rastreio bruto — útil para o hub analisar depois
+  const clicksThisRound = sessionClicks.filter(c =>
+    c.phase === round.phase && c.type === round.type && c.roundIdx === round.idx
+  );
+
+  results.push({
+    phase: round.phase,
+    direction: round.direction,
+    type: round.type,
+    idx: round.idx,
+    length: currentSequence.length,
+    sequence: [...currentSequence],
+    expected: [...expectedSequence],
+    userAnswer: [...userInput],
+    clicks: clicksThisRound,
+    correct
+  });
+
+  statusEl.textContent = '';
+  setTimeout(() => {
+    advanceRound();
+  }, 900);
+});
+
+exitBtn.addEventListener('click', () => {
+  acceptingClicks = false;
+  const round = ROUNDS[roundPointer];
+  if (round.phase === 1) {
+    jumpToPhase2();
+  } else {
+    showResults();
   }
+});
 
-  function atualizarTestesPorIdade(p) {
-    const idade = calcularIdade(p.data_nascimento);
-    const adultoEl = document.getElementById('site-choices-adulto');
-    const criancaEl = document.getElementById('site-choices-crianca');
-    const semIdadeEl = document.getElementById('site-choices-sem-idade');
+function summarizePhase(title, phaseResults) {
+  let text = `${title}\n\n`;
+  let totalCorrect = 0;
+  phaseResults.forEach(r => {
+    text += `Tarefa ${r.idx + 1} (tamanho ${r.length}): ${r.correct ? 'Correta' : 'Incorreta'}\n`;
+    text += `  Mostrado: ${r.sequence.join(' - ')}\n`;
+    text += `  Esperado: ${r.expected.join(' - ')}\n`;
+    text += `  Respondido: ${r.userAnswer.join(' - ')}\n\n`;
+    if (r.correct) totalCorrect++;
+  });
+  text += `Total: ${totalCorrect} de ${phaseResults.length} tarefas corretas.\n`;
+  return text;
+}
 
-    adultoEl.style.display = 'none';
-    criancaEl.style.display = 'none';
-    semIdadeEl.style.display = 'none';
-
-    if (idade === null) {
-      semIdadeEl.style.display = 'block';
-    } else if (idade >= 18) {
-      adultoEl.style.display = 'flex';
-    } else {
-      criancaEl.style.display = 'flex';
-    }
-  }
-
-  function abrirPerfil(p) {
-    perfilAtual = p;
-    document.getElementById('home-view').style.display = 'none';
-    document.getElementById('detail-view').style.display = 'flex';
-
-    const meta = [];
-    if (p.data_nascimento) meta.push('Nasc. ' + formatDate(p.data_nascimento));
-    if (p.genero) meta.push(capitalize(p.genero));
-    document.getElementById('detalhe-nome').textContent = p.nome;
-    document.getElementById('detalhe-meta').textContent = meta.join(' · ') || '—';
-    document.getElementById('detalhe-generated-link').classList.remove('show');
-    document.getElementById('detalhe-generated-link').innerHTML = '';
-    atualizarTestesPorIdade(p);
-
-    const dono = usuariosMap[p.criado_por];
-    const cadastradoPorEl = document.getElementById('detalhe-cadastrado-por');
-    if (dono) {
-      document.getElementById('detalhe-nome-tiles').innerHTML = nomeParaTiles(dono.nome || dono.usuario);
-      cadastradoPorEl.style.display = 'flex';
-    } else {
-      cadastradoPorEl.style.display = 'none';
-    }
-
-    carregarSessoesDetalhe(p.id);
-    location.hash = 'perfil-' + p.id;
-  }
-
-  function voltarLista() {
-    perfilAtual = null;
-    document.getElementById('detail-view').style.display = 'none';
-    document.getElementById('home-view').style.display = 'flex';
-    location.hash = '';
-    loadPending();
-  }
-
-  document.getElementById('voltar-lista-btn').addEventListener('click', voltarLista);
-
-  document.getElementById('excluir-perfil-btn').addEventListener('click', excluirPerfilAtual);
-
-  async function excluirPerfilAtual() {
-    if (!perfilAtual) return;
-    const ok = confirm(`Excluir o perfil de "${perfilAtual.nome}"? Isso também remove as sessões (links e resultados) desse perfil. Essa ação não pode ser desfeita.`);
-    if (!ok) return;
-
-    const btn = document.getElementById('excluir-perfil-btn');
-    btn.disabled = true;
-    const perfilId = perfilAtual.id;
-
-    const { error: erroSessoes } = await sb.from('sessoes').delete().eq('perfil_id', perfilId);
-    if (erroSessoes) {
-      alert('Não foi possível remover as sessões desse perfil: ' + erroSessoes.message);
-      btn.disabled = false;
-      return;
-    }
-
-    const { error: erroPerfil } = await sb.from('perfis').delete().eq('id', perfilId);
-    btn.disabled = false;
-    if (erroPerfil) {
-      alert('Não foi possível excluir o perfil: ' + erroPerfil.message);
-      return;
-    }
-
-    voltarLista();
-    loadProfiles();
-  }
-
-  document.getElementById('detalhe-site-cubos').addEventListener('click', () => gerarLinkDetalhe('cubos'));
-  document.getElementById('detalhe-site-adf').addEventListener('click', () => gerarLinkDetalhe('adf'));
-  document.getElementById('detalhe-site-ao').addEventListener('click', () => gerarLinkDetalhe('ao'));
-  document.getElementById('detalhe-site-jdneup').addEventListener('click', () => gerarLinkDetalhe('jdneup'));
-  document.getElementById('detalhe-site-spanvisuo').addEventListener('click', () => gerarLinkDetalhe('spanvisuo'));
-  document.getElementById('detalhe-site-adfwnv').addEventListener('click', () => gerarLinkDetalhe('adfwnv'));
-
-  const SITE_URLS = {
-    cubos: 'https://cubosw.netlify.app/',
-    adf: 'https://adfwss.netlify.app/',
-    ao: 'https://aowss.netlify.app/',
-    jdneup: 'https://jdneup.netlify.app/',
-    spanvisuo: 'https://spanvisuo.netlify.app/',
-    adfwnv: 'https://adfwnv.netlify.app/'
+// Monta o pacote de dados da sessão inteira (treinos + tarefas + cada clique bruto).
+// Formato pensado para já poder ser enviado ao hub futuramente, sem precisar reestruturar nada.
+function buildSessionData() {
+  return {
+    test: 'span-visuoespacial',
+    token: hubToken, // será usado para identificar o perfil/sessão quando conectado ao hub
+    finishedAt: new Date().toISOString(),
+    results, // todas as rodadas de treino e tarefa, com sequência, esperado, resposta e cliques
+    rawClicks: sessionClicks // todos os cliques da sessão inteira, em ordem, com timestamp
   };
+}
 
-  async function gerarLinkDetalhe(site) {
-    if (!perfilAtual) return;
-    const perfilId = perfilAtual.id;
-    const box = document.getElementById('detalhe-generated-link');
-    box.classList.add('show');
-    box.innerHTML = 'Gerando...';
+// Encerra a sessão no hub (invalida o token) ao final do teste.
+// A pontuação detalhada (sessionData) ainda não é enviada/guardada no hub — só a marcação de concluído.
+function saveSessionToHub(sessionData) {
+  if (!hubToken) return; // rodando fora do hub (sem token) — nada a fazer
+  fetch(SUPABASE_URL + "/functions/v1/concluir-sessao", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY },
+    body: JSON.stringify({ token: hubToken, dados: sessionData })
+  }).catch(() => {});
+}
 
-    const token = crypto.randomUUID();
-    const expiraEm = new Date(Date.now() + 90 * 60 * 1000).toISOString();
+function showResults() {
+  statusEl.textContent = 'Teste concluído!';
+  answerRevealEl.style.display = 'none';
+  startBtn.style.display = 'none';
+  finishBtn.style.display = 'none';
+  exitBtn.style.display = 'none';
 
-    const { error } = await sb.from('sessoes').insert({
-      perfil_id: perfilId,
-      site,
-      token,
-      expira_em: expiraEm
-    });
+  const phase1Tasks = results.filter(r => r.phase === 1 && r.type === 'tarefa');
+  const phase2Tasks = results.filter(r => r.phase === 2 && r.type === 'tarefa');
 
-    if (error) {
-      box.innerHTML = 'Erro ao gerar link: ' + error.message;
-      return;
-    }
+  let text = summarizePhase('Resumo — Parte 1 (ordem direta)', phase1Tasks);
+  text += '\n----------------------------------------\n\n';
+  text += summarizePhase('Resumo — Parte 2 (ordem inversa)', phase2Tasks);
 
-    const link = SITE_URLS[site] + '?t=' + token;
+  resultsEl.textContent = text;
+  resultsEl.style.display = 'block';
 
-    box.innerHTML = `
-      <div>${link}</div>
-      <button class="copy-btn" data-link="${link}">Copiar link</button>
-      <div class="expira-info">Expira em 1h30 · uso único</div>
-    `;
-    box.querySelector('.copy-btn').addEventListener('click', (e) => {
-      navigator.clipboard.writeText(e.target.dataset.link);
-      e.target.textContent = 'Copiado!';
-      setTimeout(() => { e.target.textContent = 'Copiar link'; }, 1500);
-    });
-    carregarSessoesDetalhe(perfilId);
-  }
+  saveSessionToHub(buildSessionData());
+}
 
-  async function carregarSessoesDetalhe(perfilId) {
-    const container = document.getElementById('detalhe-sessoes-list');
-    container.innerHTML = '<div class="empty">Carregando...</div>';
-
-    const { data: { session } } = await sb.auth.getSession();
-    try {
-      const res = await fetch(EDGE_BASE + '/listar-sessoes-perfil', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + session.access_token,
-          'apikey': SUPABASE_KEY
-        },
-        body: JSON.stringify({ perfil_id: perfilId })
-      });
-      const json = await res.json();
-      const sessoes = json.sessoes || [];
-
-      if (sessoes.length === 0) {
-        container.innerHTML = '<div class="empty">Nenhum link gerado ainda para este perfil.</div>';
-        return;
-      }
-
-      container.innerHTML = '';
-      sessoes.forEach(s => {
-        const expirado = !s.concluido && new Date(s.expira_em).getTime() < Date.now();
-        const statusClasse = s.concluido ? 'status-concluido' : (expirado ? 'status-expirado' : 'status-pendente');
-        const statusTexto = s.concluido ? 'Concluído' : (expirado ? 'Expirado' : 'Em aberto');
-        const statusIcone = s.concluido
-          ? '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3" width="1" height="1" fill="currentColor"/><rect x="1" y="4" width="1" height="1" fill="currentColor"/><rect x="2" y="5" width="1" height="1" fill="currentColor"/><rect x="3" y="4" width="1" height="1" fill="currentColor"/><rect x="4" y="3" width="1" height="1" fill="currentColor"/><rect x="5" y="2" width="1" height="1" fill="currentColor"/><rect x="6" y="1" width="1" height="1" fill="currentColor"/><rect x="7" y="0" width="1" height="1" fill="currentColor"/></svg>'
-          : expirado
-          ? '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="1" height="1" fill="currentColor"/><rect x="1" y="1" width="1" height="1" fill="currentColor"/><rect x="2" y="2" width="1" height="1" fill="currentColor"/><rect x="3" y="3" width="1" height="1" fill="currentColor"/><rect x="4" y="4" width="1" height="1" fill="currentColor"/><rect x="5" y="5" width="1" height="1" fill="currentColor"/><rect x="6" y="6" width="1" height="1" fill="currentColor"/><rect x="7" y="7" width="1" height="1" fill="currentColor"/><rect x="7" y="0" width="1" height="1" fill="currentColor"/><rect x="6" y="1" width="1" height="1" fill="currentColor"/><rect x="5" y="2" width="1" height="1" fill="currentColor"/><rect x="4" y="3" width="1" height="1" fill="currentColor"/><rect x="3" y="4" width="1" height="1" fill="currentColor"/><rect x="2" y="5" width="1" height="1" fill="currentColor"/><rect x="1" y="6" width="1" height="1" fill="currentColor"/><rect x="0" y="7" width="1" height="1" fill="currentColor"/></svg>'
-          : '<svg width="10" height="10" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="0" width="6" height="1" fill="currentColor"/><rect x="2" y="1" width="4" height="1" fill="currentColor"/><rect x="3" y="2" width="2" height="1" fill="currentColor"/><rect x="3" y="3" width="2" height="1" fill="currentColor"/><rect x="2" y="4" width="4" height="1" fill="currentColor"/><rect x="1" y="5" width="6" height="1" fill="currentColor"/></svg>';
-        const div = document.createElement('div');
-        div.className = 'sessao-item';
-        div.innerHTML = `
-          <div>
-            <strong>${capitalize(s.site)}</strong>
-            <span class="status-tag ${statusClasse}">${statusIcone}${statusTexto}</span>
-            <div class="expira-info">${formatDateTime(s.criado_em)}</div>
-          </div>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>
-            <button class="danger-btn excluir-sessao-btn" data-sessao="${s.id}" data-perfil="${perfilId}" title="Excluir teste">
-              <svg width="11" height="11" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="2" y="0" width="4" height="1"/><rect x="0" y="1" width="8" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="1" y="3" width="1" height="4"/><rect x="3" y="3" width="1" height="4"/><rect x="4" y="3" width="1" height="4"/><rect x="6" y="3" width="1" height="4"/><rect x="1" y="7" width="6" height="1"/></svg>
-            </button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-
-      container.querySelectorAll('.ver-prints-btn').forEach(btn => {
-        btn.addEventListener('click', () => abrirGaleria(btn.dataset.sessao, btn.dataset.site));
-      });
-      container.querySelectorAll('.excluir-sessao-btn').forEach(btn => {
-        btn.addEventListener('click', () => excluirSessao(btn.dataset.sessao, btn.dataset.perfil));
-      });
-    } catch (e) {
-      container.innerHTML = '<div class="empty">Erro ao carregar sessões.</div>';
-    }
-  }
-
-  async function excluirSessao(sessaoId, perfilId) {
-    const ok = confirm('Excluir este teste? O link e os resultados salvos dessa sessão serão perdidos. Essa ação não pode ser desfeita.');
-    if (!ok) return;
-
-    const { error } = await sb.from('sessoes').delete().eq('id', sessaoId);
-    if (error) {
-      alert('Não foi possível excluir esse teste: ' + error.message);
-      return;
-    }
-    carregarSessoesDetalhe(perfilId);
-  }
-
-  function abrirAmpliado(dados) {
-    const { pecasValidas, minX, minY, largura, altura } = dados;
-    const escalaGrande = Math.min(760 / largura, 560 / altura);
-    const pecasHtml = pecasValidas.map(c => {
-      const left = (c.x - minX) * escalaGrande;
-      const top = (c.y - minY) * escalaGrande;
-      const w = c.w * escalaGrande;
-      const h = c.h * escalaGrande;
-      const rot = c.rotacao || 0;
-      return `<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px;background-image:url('${c.imagem}');background-size:cover;background-position:center;transform:rotate(${rot}deg);"></div>`;
-    }).join('');
-    document.getElementById('zoom-content').innerHTML = `
-      <div style="position:relative; width:${largura * escalaGrande}px; height:${altura * escalaGrande}px; background:#f3f7fa; border-radius:8px;">
-        ${pecasHtml}
-      </div>
-    `;
-    document.getElementById('zoom-overlay').classList.add('open');
-  }
-
-  document.getElementById('zoom-close').addEventListener('click', () => {
-    document.getElementById('zoom-overlay').classList.remove('open');
-  });
-  document.getElementById('zoom-overlay').addEventListener('click', (e) => {
-    if (e.target.id === 'zoom-overlay') e.target.classList.remove('open');
-  });
-
-  async function abrirGaleria(sessaoId, site) {
-    const overlay = document.getElementById('modal-overlay');
-    const grid = document.getElementById('prints-grid');
-    const title = document.getElementById('modal-title');
-    title.textContent = 'Prints — ' + capitalize(site);
-    grid.innerHTML = '<div class="empty">Carregando prints...</div>';
-    overlay.classList.add('open');
-
-    const { data: { session } } = await sb.auth.getSession();
-    try {
-      const res = await fetch(EDGE_BASE + '/listar-prints-sessao', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + session.access_token,
-          'apikey': SUPABASE_KEY
-        },
-        body: JSON.stringify({ sessao_id: sessaoId })
-      });
-      const json = await res.json();
-      const prints = json.prints || [];
-
-      if (prints.length === 0) {
-        grid.innerHTML = '<div class="empty">Nenhum print salvo para esta sessão ainda.</div>';
-        return;
-      }
-
-      grid.innerHTML = '';
-      prints.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'print-card';
-
-        let montagemDados = null;
-
-        let cubosHtml = '';
-        let tempoHtml = '';
-
-        const ehSequencia = p.dados_cubo && !Array.isArray(p.dados_cubo) && p.dados_cubo.tipo === 'sequencia';
-        const ehMontagem = p.dados_cubo && !Array.isArray(p.dados_cubo) && p.dados_cubo.tipo === 'montagem';
-
-        if (ehSequencia) {
-          const chips = p.dados_cubo.ordem_final.map(n =>
-            `<span class="chip-numero">${escapeHtml(String(n))}</span>`
-          ).join('');
-          cubosHtml = `<div class="sequencia-numeros">${chips}</div>`;
-        } else {
-          const listaPecas = ehMontagem ? (p.dados_cubo.pecas || []) : (Array.isArray(p.dados_cubo) ? p.dados_cubo : []);
-          const pecasValidas = listaPecas.filter(c => c.imagem && typeof c.x === 'number');
-
-          if (ehMontagem && typeof p.dados_cubo.tempo_segundos === 'number') {
-            const s = p.dados_cubo.tempo_segundos;
-            const mm = String(Math.floor(s / 60)).padStart(2, '0');
-            const ss = String(s % 60).padStart(2, '0');
-            tempoHtml = `<div class="expira-info">⏱ ${mm}:${ss}</div>`;
-          }
-
-          if (pecasValidas.length > 0) {
-            let minX, minY, largura, altura;
-
-            if (ehMontagem && p.dados_cubo.viewport_w && p.dados_cubo.viewport_h) {
-              minX = 0;
-              minY = 0;
-              largura = p.dados_cubo.viewport_w;
-              altura = p.dados_cubo.viewport_h;
-            } else {
-              minX = Math.min(...pecasValidas.map(c => c.x));
-              minY = Math.min(...pecasValidas.map(c => c.y));
-              const maxX = Math.max(...pecasValidas.map(c => c.x + c.w));
-              const maxY = Math.max(...pecasValidas.map(c => c.y + c.h));
-              largura = Math.max(1, maxX - minX);
-              altura = Math.max(1, maxY - minY);
-            }
-
-            let escala;
-            if (ehMontagem && p.dados_cubo.viewport_w && p.dados_cubo.viewport_h) {
-              escala = Math.min(220 / largura, 160 / altura);
-            } else {
-              escala = Math.min(180 / largura, 130 / altura, 1.5);
-            }
-
-            const pecas = pecasValidas.map(c => {
-              const left = (c.x - minX) * escala;
-              const top = (c.y - minY) * escala;
-              const w = c.w * escala;
-              const h = c.h * escala;
-              const rot = c.rotacao || 0;
-              return `<div class="peca-2d" style="left:${left}px; top:${top}px; width:${w}px; height:${h}px; background-image:url('${c.imagem}'); transform: rotate(${rot}deg);"></div>`;
-            }).join('');
-
-            cubosHtml = `<div class="montagem-2d" style="width:${largura * escala}px; height:${altura * escala}px;">${pecas}</div>`;
-            montagemDados = { pecasValidas, minX, minY, largura, altura };
-          }
-        }
-
-        card.innerHTML = `
-          ${cubosHtml}
-          ${(cubosHtml || !p.url) ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
-          <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
-          ${tempoHtml}
-        `;
-        const imgEl = card.querySelector('img');
-        if (imgEl) imgEl.addEventListener('click', () => {
-          document.getElementById('zoom-content').innerHTML = `<img src="${p.url}" style="max-width:100%; max-height:75vh; border-radius:8px;">`;
-          document.getElementById('zoom-overlay').classList.add('open');
-        });
-        if (montagemDados) {
-          const montagemEl = card.querySelector('.montagem-2d');
-          if (montagemEl) montagemEl.addEventListener('click', () => abrirAmpliado(montagemDados));
-        }
-        grid.appendChild(card);
-      });
-    } catch (e) {
-      grid.innerHTML = '<div class="empty">Erro ao carregar prints.</div>';
-    }
-  }
-
-  document.getElementById('modal-close').addEventListener('click', () => {
-    document.getElementById('modal-overlay').classList.remove('open');
-  });
-  document.getElementById('modal-overlay').addEventListener('click', (e) => {
-    if (e.target.id === 'modal-overlay') e.target.classList.remove('open');
-  });
-
-  function formatDateTime(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  function formatDate(iso) {
-    const [y, m, d] = iso.split('-');
-    return `${d}/${m}/${y}`;
-  }
-  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-  function escapeHtml(s) {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
-  }
+// Primeira rodada (tutorial da Parte 1)
+setupRoundIntro();
 </script>
 
 </body>
