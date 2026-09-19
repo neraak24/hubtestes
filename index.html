@@ -921,6 +921,9 @@
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Cubos</span>
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras</span>
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Armar Objetos</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Janelas Digitais</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Span Visuoespacial</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras (infantil)</span>
         </div>
       </div>
     </div>
@@ -978,12 +981,18 @@
 
     <div class="card">
       <h2>Gerar link</h2>
-      <p class="section-sub">Escolha o site para criar um link individual e temporário.</p>
-      <div class="site-choices">
+      <p class="section-sub" id="detalhe-gerar-link-sub">Escolha o site para criar um link individual e temporário.</p>
+      <div class="site-choices" id="site-choices-adulto">
         <button id="detalhe-site-cubos">Cubos</button>
         <button id="detalhe-site-adf">Arranjo de Figuras</button>
         <button id="detalhe-site-ao">Armar Objetos</button>
       </div>
+      <div class="site-choices" id="site-choices-crianca" style="display:none;">
+        <button id="detalhe-site-jdneup">Janelas Digitais</button>
+        <button id="detalhe-site-spanvisuo">Span Visuoespacial</button>
+        <button id="detalhe-site-adfwnv">Arranjo de Figuras (infantil)</button>
+      </div>
+      <p class="section-sub" id="site-choices-sem-idade" style="display:none; margin-top:4px;">Informe a data de nascimento do perfil para liberar os testes.</p>
       <div class="generated-link" id="detalhe-generated-link"></div>
     </div>
   </div>
@@ -1309,6 +1318,37 @@
 
   let perfilAtual = null;
 
+  function calcularIdade(dataNascimento) {
+    if (!dataNascimento) return null;
+    const nasc = new Date(dataNascimento + 'T00:00:00');
+    if (isNaN(nasc.getTime())) return null;
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nasc.getFullYear();
+    const aindaNaoFezAniversario = (hoje.getMonth() < nasc.getMonth()) ||
+      (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate());
+    if (aindaNaoFezAniversario) idade--;
+    return idade;
+  }
+
+  function atualizarTestesPorIdade(p) {
+    const idade = calcularIdade(p.data_nascimento);
+    const adultoEl = document.getElementById('site-choices-adulto');
+    const criancaEl = document.getElementById('site-choices-crianca');
+    const semIdadeEl = document.getElementById('site-choices-sem-idade');
+
+    adultoEl.style.display = 'none';
+    criancaEl.style.display = 'none';
+    semIdadeEl.style.display = 'none';
+
+    if (idade === null) {
+      semIdadeEl.style.display = 'block';
+    } else if (idade >= 18) {
+      adultoEl.style.display = 'flex';
+    } else {
+      criancaEl.style.display = 'flex';
+    }
+  }
+
   function abrirPerfil(p) {
     perfilAtual = p;
     document.getElementById('home-view').style.display = 'none';
@@ -1321,6 +1361,7 @@
     document.getElementById('detalhe-meta').textContent = meta.join(' · ') || '—';
     document.getElementById('detalhe-generated-link').classList.remove('show');
     document.getElementById('detalhe-generated-link').innerHTML = '';
+    atualizarTestesPorIdade(p);
 
     const dono = usuariosMap[p.criado_por];
     const cadastradoPorEl = document.getElementById('detalhe-cadastrado-por');
@@ -1377,11 +1418,17 @@
   document.getElementById('detalhe-site-cubos').addEventListener('click', () => gerarLinkDetalhe('cubos'));
   document.getElementById('detalhe-site-adf').addEventListener('click', () => gerarLinkDetalhe('adf'));
   document.getElementById('detalhe-site-ao').addEventListener('click', () => gerarLinkDetalhe('ao'));
+  document.getElementById('detalhe-site-jdneup').addEventListener('click', () => gerarLinkDetalhe('jdneup'));
+  document.getElementById('detalhe-site-spanvisuo').addEventListener('click', () => gerarLinkDetalhe('spanvisuo'));
+  document.getElementById('detalhe-site-adfwnv').addEventListener('click', () => gerarLinkDetalhe('adfwnv'));
 
   const SITE_URLS = {
     cubos: 'https://cubosw.netlify.app/',
     adf: 'https://adfwss.netlify.app/',
-    ao: 'https://aowss.netlify.app/'
+    ao: 'https://aowss.netlify.app/',
+    jdneup: 'https://jdneup.netlify.app/',
+    spanvisuo: 'https://spanvisuo.netlify.app/',
+    adfwnv: 'https://adfwnv.netlify.app/'
   };
 
   async function gerarLinkDetalhe(site) {
