@@ -924,6 +924,7 @@
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Janelas Digitais</span>
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Span Visuoespacial</span>
           <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Arranjo de Figuras (WNV)</span>
+          <span><svg class="deco-icon" width="10" height="10" viewBox="0 0 8 8" fill="#5c7654" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="0" width="2" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="1" y="2" width="6" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="6" y="2" width="1" height="2"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/></svg>Compreendendo Instruções</span>
         </div>
       </div>
     </div>
@@ -991,6 +992,7 @@
         <button id="detalhe-site-jdneup">Janelas Digitais</button>
         <button id="detalhe-site-spanvisuo">Span Visuoespacial</button>
         <button id="detalhe-site-adfwnv">Arranjo de Figuras (WNV)</button>
+        <button id="detalhe-site-compinst">Compreendendo Instruções</button>
       </div>
       <p class="section-sub" id="site-choices-sem-idade" style="display:none; margin-top:4px;">Informe a data de nascimento do perfil para liberar os testes.</p>
       <div class="generated-link" id="detalhe-generated-link"></div>
@@ -1421,6 +1423,7 @@
   document.getElementById('detalhe-site-jdneup').addEventListener('click', () => gerarLinkDetalhe('jdneup'));
   document.getElementById('detalhe-site-spanvisuo').addEventListener('click', () => gerarLinkDetalhe('spanvisuo'));
   document.getElementById('detalhe-site-adfwnv').addEventListener('click', () => gerarLinkDetalhe('adfwnv'));
+  document.getElementById('detalhe-site-compinst').addEventListener('click', () => gerarLinkDetalhe('compinst'));
 
   const SITE_URLS = {
     cubos: 'https://cubosw.netlify.app/',
@@ -1428,7 +1431,8 @@
     ao: 'https://aowss.netlify.app/',
     jdneup: 'https://jdneup.netlify.app/',
     spanvisuo: 'https://spanvisuo.netlify.app/',
-    adfwnv: 'https://adfwnv.netlify.app/'
+    adfwnv: 'https://adfwnv.netlify.app/',
+    compinst: 'https://compinst.netlify.app/'
   };
 
   async function gerarLinkDetalhe(site) {
@@ -1506,7 +1510,7 @@
         const div = document.createElement('div');
         div.className = 'sessao-item';
         sessoesPorId[s.id] = s;
-        const ehSequencia = s.site === 'jdneup' || s.site === 'spanvisuo';
+        const ehSequencia = s.site === 'jdneup' || s.site === 'spanvisuo' || s.site === 'compinst';
         const botaoResultado = ehSequencia
           ? `<button class="ver-resultado-btn" data-sessao="${s.id}">Ver resultado</button>`
           : `<button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>`;
