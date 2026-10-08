@@ -1502,7 +1502,12 @@
       return;
     }
 
-    const link = SITE_URLS[site] + '?t=' + token;
+    let link = SITE_URLS[site] + '?t=' + token;
+    // compinst começa em etapas diferentes conforme a idade: envia a idade no link
+    if (site === 'compinst') {
+      const idadeLink = calcularIdade(perfilAtual.data_nascimento);
+      if (idadeLink !== null) link += '&i=' + idadeLink;
+    }
 
     box.innerHTML = `
       <div>${link}</div>
