@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hub · Perfis</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://compinst.netlify.app; connect-src 'self' https://bjzmlvsskhfrkvblvsjj.supabase.co; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -545,21 +547,22 @@
     color: var(--ink-soft);
   }
   .site-choices button:hover { border-color: var(--accent); color: var(--accent); }
-  .livro-link {
-    display: flex;
+  .livro-grande {
+    display: none;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    margin-top: 12px;
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: #fff;
+    gap: 8px;
+    margin: 28px auto 0;
+    width: min(260px, 80%);
     text-decoration: none;
     color: var(--ink-soft);
-    font-size: 12px;
+    font-size: 13px;
+    text-align: center;
+    transition: transform .15s ease;
   }
-  .livro-link:hover { border-color: var(--accent); color: var(--accent); }
-  .livro-link img { width: 56px; height: auto; image-rendering: pixelated; flex-shrink: 0; }
+  .livro-grande img { width: 100%; height: auto; image-rendering: pixelated; }
+  .livro-grande:hover { transform: translateY(-4px) scale(1.03); color: var(--accent); }
+  .livro-grande:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }
   .generated-link {
     display: none;
     background: var(--accent-soft);
@@ -1054,13 +1057,14 @@
         <button id="detalhe-site-adfwnv">Arranjo de Figuras (WNV)</button>
         <button id="detalhe-site-compinst">Compreendendo Instruções</button>
       </div>
-      <a class="livro-link" id="detalhe-livro-estimulos" href="https://livrodeestimulos.netlify.app/" target="_blank" rel="noopener" style="display:none;">
-        <img src="livro.png" alt="">
-        <span>Livro de Estímulos</span>
-      </a>
       <p class="section-sub" id="site-choices-sem-idade" style="display:none; margin-top:4px;">Informe a data de nascimento do perfil para liberar os testes.</p>
       <div class="generated-link" id="detalhe-generated-link"></div>
     </div>
+
+    <a class="livro-grande" id="detalhe-livro-estimulos" href="https://livrodeestimulos.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir o Livro de Estímulos">
+      <img src="livro.png" alt="">
+      <span>Livro de Estímulos</span>
+    </a>
   </div>
   </div>
 </div>
@@ -1366,7 +1370,7 @@
         <div class="profile-top-row" style="cursor:pointer;">
           <div>
             <div class="profile-name">${escapeHtml(p.nome)}</div>
-            <div class="profile-meta">${meta.join(' · ') || '—'}</div>
+            <div class="profile-meta">${escapeHtml(meta.join(' · ')) || '—'}</div>
           </div>
           <div class="profile-actions">
             <button class="link-btn">Abrir perfil →</button>
@@ -1405,8 +1409,8 @@
     adultoEl.style.display = 'none';
     criancaEl.style.display = 'none';
     semIdadeEl.style.display = 'none';
-    const livroEl = document.getElementById('detalhe-livro-estimulos');
-    livroEl.style.display = (idade !== null && idade <= 16) ? 'flex' : 'none';
+    document.getElementById('detalhe-livro-estimulos').style.display =
+      (idade !== null && idade <= 16) ? 'flex' : 'none';
 
     if (idade === null) {
       semIdadeEl.style.display = 'block';
@@ -1519,7 +1523,7 @@
     });
 
     if (error) {
-      box.innerHTML = 'Erro ao gerar link: ' + error.message;
+      box.textContent = 'Erro ao gerar link. Tente novamente.';
       return;
     }
 
@@ -1696,7 +1700,7 @@
           : `<button class="ver-prints-btn" data-sessao="${s.id}" data-site="${s.site}">Ver prints</button>`;
         div.innerHTML = `
           <div>
-            <strong>${capitalize(s.site)}</strong>
+            <strong>${escapeHtml(capitalize(s.site))}</strong>
             <span class="status-tag ${statusClasse}">${statusIcone}${statusTexto}</span>
             <div class="expira-info">${formatDateTime(s.criado_em)}</div>
           </div>
@@ -1905,13 +1909,13 @@
 
         card.innerHTML = `
           ${cubosHtml}
-          ${(cubosHtml || !p.url) ? '' : `<img src="${p.url}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
+          ${(cubosHtml || !p.url) ? '' : `<img src="${escapeHtml(p.url)}" alt="Etapa ${escapeHtml(String(p.etapa))}">`}
           <div class="etapa-label">${escapeHtml(String(p.etapa))}</div>
           ${tempoHtml}
         `;
         const imgEl = card.querySelector('img');
         if (imgEl) imgEl.addEventListener('click', () => {
-          document.getElementById('zoom-content').innerHTML = `<img src="${p.url}" style="max-width:100%; max-height:75vh; border-radius:8px;">`;
+          document.getElementById('zoom-content').innerHTML = `<img src="${escapeHtml(p.url)}" style="max-width:100%; max-height:75vh; border-radius:8px;">`;
           document.getElementById('zoom-overlay').classList.add('open');
         });
         if (montagemDados) {
@@ -1943,9 +1947,12 @@
   }
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function escapeHtml(s) {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 </script>
 
