@@ -1137,7 +1137,8 @@
   function showApp() {
     loginView.style.display = 'none';
     appView.style.display = 'block';
-    loadUsuarios();
+    perfilRestaurado = false;
+    usuariosPronto = loadUsuarios();
     carregarBoasVindas();
     loadProfiles();
     loadPending();
@@ -1323,6 +1324,36 @@
   });
 
   let ultimosPerfis = [];
+  let usuariosPronto = Promise.resolve();
+  let perfilRestaurado = false;
+
+  // Ao atualizar a página (F5), volta para o perfil que estava aberto (guardado no endereço: #perfil-<id>)
+  function idPerfilDoHash() {
+    const m = location.hash.match(/^#perfil-([0-9a-fA-F-]{36})$/);
+    return m ? m[1] : null;
+  }
+
+  async function restaurarPerfilDoHash() {
+    if (perfilRestaurado) return;
+    perfilRestaurado = true;
+    const id = idPerfilDoHash();
+    if (!id) return;
+    await usuariosPronto;
+    const p = ultimosPerfis.find(x => x.id === id);
+    if (p) abrirPerfil(p);
+    else location.hash = '';
+  }
+
+  // Botão voltar/avançar do navegador também navega entre lista e perfil
+  window.addEventListener('hashchange', () => {
+    const id = idPerfilDoHash();
+    if (id && (!perfilAtual || perfilAtual.id !== id)) {
+      const p = ultimosPerfis.find(x => x.id === id);
+      if (p) abrirPerfil(p);
+    } else if (!id && perfilAtual) {
+      voltarLista();
+    }
+  });
 
   async function loadProfiles() {
     const { data, error } = await sb
@@ -1338,6 +1369,7 @@
     ultimosPerfis = data;
     const buscaInput = document.getElementById('busca-perfil');
     renderProfileList(filtrarPerfis(data, buscaInput ? buscaInput.value : ''));
+    restaurarPerfilDoHash();
   }
 
   function filtrarPerfis(lista, termo) {
