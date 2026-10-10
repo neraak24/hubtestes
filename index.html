@@ -884,11 +884,11 @@
 
         <form id="request-form" style="display:none;">
           <label for="req-nome">Nome</label>
-          <input id="req-nome" type="text" required>
+          <input id="req-nome" type="text" required minlength="2" maxlength="60" autocomplete="name">
           <label for="req-usuario">Usuário</label>
           <input id="req-usuario" type="text" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9._-]+" title="Letras, números, ponto, traço ou underline">
           <label for="req-senha">Senha</label>
-          <input id="req-senha" type="password" required minlength="6">
+          <input id="req-senha" type="password" required minlength="10" maxlength="72" autocomplete="new-password" title="De 10 a 72 caracteres">
           <button class="primary" type="submit" id="request-btn">Enviar pedido</button>
           <p style="text-align:center; margin-top:12px; font-size:13px;">
             <a href="#" id="show-login-link" style="color:var(--accent);">Voltar para o login</a>
