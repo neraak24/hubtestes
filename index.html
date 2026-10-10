@@ -545,6 +545,21 @@
     color: var(--ink-soft);
   }
   .site-choices button:hover { border-color: var(--accent); color: var(--accent); }
+  .livro-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 12px;
+  }
+  .livro-link:hover { border-color: var(--accent); color: var(--accent); }
+  .livro-link img { width: 56px; height: auto; image-rendering: pixelated; flex-shrink: 0; }
   .generated-link {
     display: none;
     background: var(--accent-soft);
@@ -1039,6 +1054,10 @@
         <button id="detalhe-site-adfwnv">Arranjo de Figuras (WNV)</button>
         <button id="detalhe-site-compinst">Compreendendo Instruções</button>
       </div>
+      <a class="livro-link" id="detalhe-livro-estimulos" href="https://livrodeestimulos.netlify.app/" target="_blank" rel="noopener" style="display:none;">
+        <img src="livro.png" alt="">
+        <span>Livro de Estímulos</span>
+      </a>
       <p class="section-sub" id="site-choices-sem-idade" style="display:none; margin-top:4px;">Informe a data de nascimento do perfil para liberar os testes.</p>
       <div class="generated-link" id="detalhe-generated-link"></div>
     </div>
@@ -1386,6 +1405,8 @@
     adultoEl.style.display = 'none';
     criancaEl.style.display = 'none';
     semIdadeEl.style.display = 'none';
+    const livroEl = document.getElementById('detalhe-livro-estimulos');
+    livroEl.style.display = (idade !== null && idade <= 16) ? 'flex' : 'none';
 
     if (idade === null) {
       semIdadeEl.style.display = 'block';
