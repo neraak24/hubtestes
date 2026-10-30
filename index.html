@@ -561,6 +561,7 @@
     transition: transform .15s ease;
   }
   .livro-grande img { width: 100%; height: auto; image-rendering: pixelated; }
+  .livro-grande.realista img { image-rendering: auto; }
   .livro-grande:hover { transform: translateY(-4px) scale(1.03); color: var(--accent); }
   .livro-grande:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }
   .generated-link {
@@ -1063,6 +1064,11 @@
       <img src="livro.png" alt="">
       <span>Livro de Estímulos</span>
     </a>
+    <!-- Livro de Estímulos adulto (17+). Se o endereço no Netlify for outro, troque só o href abaixo. -->
+    <a class="livro-grande realista" id="detalhe-livro-estimulos-adulto" href="https://livrodeestimulosad.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir o Livro de Estímulos para adultos">
+      <img src="livro-adulto.webp" alt="" width="640" height="510">
+      <span>Livro de Estímulos · Adulto</span>
+    </a>
   </div>
   </div>
 </div>
@@ -1441,6 +1447,8 @@
     semIdadeEl.style.display = 'none';
     document.getElementById('detalhe-livro-estimulos').style.display =
       (idade !== null && idade <= 16) ? 'flex' : 'none';
+    document.getElementById('detalhe-livro-estimulos-adulto').style.display =
+      (idade !== null && idade >= 17) ? 'flex' : 'none';
 
     if (idade === null) {
       semIdadeEl.style.display = 'block';
